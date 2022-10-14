@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_myLove"
+            android:icon="@drawable/mylove"
+            android:title="我喜欢" />
+        <item
+            android:id="@+id/nav_recommend"
+            android:icon="@drawable/recommend"
+            android:title="歌曲推荐" />
+        <item
+            android:id="@+id/nav_download"
+            android:icon="@drawable/download"
+            android:title="下载管理" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settings"
+            android:title="功能设置" />
+        <item
+            android:id="@+id/nav_aboutUs"
+            android:icon="@drawable/aboutus"
+            android:title="关于鲲乐" />
+        <item
+            android:id="@+id/nav_exit"
+            android:icon="@drawable/exit"
+            android:title="退出应用" />
+    </group>
+</menu>
