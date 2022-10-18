@@ -80,7 +80,7 @@
                 android:ems="10"
                 android:hint="请输入您的密码"
                 android:inputType="textPassword"
-                android:textColor="#ffff00" />
+                android:textColor="#393939" />
 
             <EditText
                 android:id="@+id/login_edit_account"
@@ -94,7 +94,7 @@
                 android:background="@drawable/textshape"
                 android:hint="请输入您的鲲名"
                 android:inputType="textPersonName"
-                android:textColor="#ffff00" />
+                android:textColor="#393939" />
 
             <CheckBox
                 android:id="@+id/Login_Remember"

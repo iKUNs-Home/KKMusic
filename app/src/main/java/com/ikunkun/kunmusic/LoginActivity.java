@@ -35,11 +35,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.login_btn_login://登录按钮
+            //登录按钮
+            case R.id.login_btn_login:
                 login();
                 break;
-            case R.id.login_btn_register://这注册按钮
-                Intent intent_Login_to_Register = new Intent(LoginActivity.this,RegisterActivity.class) ;    //切换Login Activity至User Activity
+            //注册按钮
+            case R.id.login_btn_register:
+                Intent intent_Login_to_Register = new Intent(LoginActivity.this,RegisterActivity.class) ;
                 startActivity(intent_Login_to_Register);
                 break;
         }
@@ -49,19 +51,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * 登录
      */
     public void login() {
-        //获取用户名
-        String user=mAccount.getText().toString().trim();
-        //获取密码
-        String pwd=mPwd.getText().toString().trim();
-        List<UserInfo> list= LitePal.where(" userName = ? and userPwd = ?",user,pwd).find(UserInfo.class);
-        //登录成功
-        if (list.size()>0){
+        if (isUserNameAndPwdValid()) {
+            //获取用户名
+            String user = mAccount.getText().toString().trim();
+            //获取密码
+            String pwd = mPwd.getText().toString().trim();
+            List<UserInfo> list = LitePal.where(" userName = ? and userPwd = ?", user, pwd).find(UserInfo.class);
+            //登录成功
+            if (list.size() > 0) {
 //            Intent intent = new Intent(LoginActivity.this,InfoActivity.class) ;//切换界面
 //            intent.putExtra("userName",user);//将用户名传到InfoActivity
 //            startActivity(intent);
-            Toast.makeText(this,"登录成功", Toast.LENGTH_SHORT).show();
-        }else{//登录失败
-            Toast.makeText(this,"登录失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+            } else {//登录失败
+                Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
