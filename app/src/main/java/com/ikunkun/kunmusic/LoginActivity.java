@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.ikunkun.kunmusic.comn.UserInfo;
+import com.ikunkun.kunmusic.views.MineFragment;
+
 import org.litepal.LitePal;
 import java.util.List;
 /**
@@ -59,11 +61,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             List<UserInfo> list = LitePal.where(" userName = ? and userPwd = ?", user, pwd).find(UserInfo.class);
             //登录成功
             if (list.size() > 0) {
-//            Intent intent = new Intent(LoginActivity.this,InfoActivity.class) ;//切换界面
-//            intent.putExtra("userName",user);//将用户名传到InfoActivity
+            //切换界面
+//            Intent intent = new Intent(LoginActivity.this,xxx.class) ;
+            // 将用户名传到xxx
+//            intent.putExtra("userName",user);
 //            startActivity(intent);
                 Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-            } else {//登录失败
+                //设置用户名
+                setContentView(R.layout.nav_header);
+                System.out.println(user);
+                TextView textView=(TextView)findViewById(R.id.nav_name);
+                textView.setText(user);
+            } else {
+                //登录失败
                 Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();
             }
         }

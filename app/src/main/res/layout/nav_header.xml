@@ -12,12 +12,13 @@
         android:src="@drawable/ikun"/>
 
     <TextView
+        android:id="@+id/nav_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/head_img"
         android:layout_centerInParent="true"
         android:layout_marginTop="8dp"
-        android:text="鲲鲲爱音乐"
+        android:text="鲲鲲不爱音乐"
         android:textColor="#ffffff"
         android:textSize="22sp"/>
 
