@@ -1,4 +1,6 @@
 package com.ikunkun.kunmusic;
+import static com.ikunkun.kunmusic.MainActivity.*;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -62,16 +64,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //登录成功
             if (list.size() > 0) {
             //切换界面
-//            Intent intent = new Intent(LoginActivity.this,xxx.class) ;
+            Intent intent = new Intent(LoginActivity.this,MainActivity.class) ;
             // 将用户名传到xxx
-//            intent.putExtra("userName",user);
-//            startActivity(intent);
-                Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+            intent.putExtra("userName",user);
+            startActivity(intent);
+            Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+
                 //设置用户名
-                setContentView(R.layout.nav_header);
-                System.out.println(user);
-                TextView textView=(TextView)findViewById(R.id.nav_name);
-                textView.setText(user);
+//                setContentView(R.layout.nav_header);
+//                System.out.println(user);
+//                TextView textView=(TextView)findViewById(R.id.nav_name);
+//                textView.setText(user);
+
+
+//                class GameThread implements Runnable {
+//                    public void run() {
+//                        while (!Thread.currentThread().isInterrupted()) {
+//                            try {
+//                                Thread.sleep(100);
+//                            }
+//                            catch (InterruptedException e) {
+//                                Thread.currentThread().interrupt();
+//                            }   // 使用postInvalidate可以直接在线程中更新界面
+//                            .postInvalidate();
+//                        }
+//                    }}
+
+
+
+
             } else {
                 //登录失败
                 Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();

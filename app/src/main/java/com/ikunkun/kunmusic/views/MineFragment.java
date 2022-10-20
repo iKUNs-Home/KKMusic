@@ -41,13 +41,8 @@ public class MineFragment extends Fragment implements View.OnClickListener{
                 startActivity(intent);
             }
         });
-
     }
-
-
     @Override
     public void onClick(View view) {
-         view.getId();
-
     }
 }
