@@ -59,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="#fcfcfc"
+                android:windowSoftInputMode="adjustPan"
                 app:itemIconTint="@drawable/selected_menu_color"
                 app:itemTextColor="@drawable/selected_menu_color"
                 app:menu="@menu/tab_menu" />

@@ -1,6 +1,7 @@
 package com.ikunkun.kunmusic;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,24 +9,36 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+
+import android.content.Intent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.ikunkun.kunmusic.adapt.FragmentAdapter;
+import com.ikunkun.kunmusic.adapt.RecyclerListAdapt;
 import com.ikunkun.kunmusic.views.AboutFragment;
 import com.ikunkun.kunmusic.views.CommunityFragment;
 import com.ikunkun.kunmusic.views.HomeFragment;
 import com.ikunkun.kunmusic.views.MineFragment;
+import com.xiaoyouProject.searchbox.SearchFragment;
+import com.xiaoyouProject.searchbox.custom.IOnSearchClickListener;
+import com.xiaoyouProject.searchbox.entity.CustomLink;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;            //中间滑动页
     Toolbar toolbar;                //顶部工具栏
     DrawerLayout drawerLayout;      //左边滑动抽屉
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_menu, menu);
+        return true;
+    }
+
     //
 //        setContentView(R.layout.nav_header);
 //        Intent getData=getIntent();
@@ -45,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
 
@@ -52,15 +74,75 @@ public class MainActivity extends AppCompatActivity {
         //设置主布局
         setContentView(R.layout.activity_main);
 
+
         //获取布局控件等的id
-        bnView = findViewById(R.id.bottom_nav_view);
-        viewPager = findViewById(R.id.view_pager);
-        toolbar = findViewById(R.id.tool_bar);
-        drawerLayout = findViewById(R.id.drawer_layout);
+        bnView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
 
         //设置顶部为自定义的toolbar
 //        getSupportActionBar().hide();
         setSupportActionBar(toolbar);
+
+        //初始化搜索框
+        SearchFragment searchFragment = SearchFragment.newInstance();
+        searchFragment.setOnSearchClickListener(new IOnSearchClickListener() {
+            /**
+             *  点击搜索按钮时触发
+             * @param keyword 搜索的关键词
+             */
+            @Override
+            public void onSearchClick(String keyword) {
+                System.out.println("keyword = " + keyword);
+                //开启搜索列表activity，同时向其传送搜索关键词
+                Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+                searchIntent.putExtra("keyword",keyword);
+                startActivity(searchIntent);
+            }
+
+            /**
+             *  点击关键词预测链接时触发
+             * @param data 链接携带的数据
+             */
+            @Override
+            public void onLinkClick(Object data) {
+
+            }
+
+            /**
+             *  当搜索框内容改变时触发
+             * @param keyword 搜索的关键词
+             */
+            @Override
+            public void onTextChange(String keyword) {
+//                // 数据初始化
+//                List<CustomLink<String>> data = new ArrayList<>();
+//                data.add(new CustomLink<>("链接1", "数据1"));
+//                data.add(new CustomLink<>("链接2", "数据2"));
+//                data.add(new CustomLink<>("链接3", "数据3"));
+//                // 这里我们设置关键词预测显示的内容
+//                searchFragment.setLinks(data);
+            }
+        });
+
+        //设置顶部Toolbar的菜单键事件监听
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.music_search:
+                        //显示搜索框
+                        searchFragment.showFragment(getSupportFragmentManager(), SearchFragment.TAG);
+
+//                        Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+//                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
 
         //关联drawerLayout和toolbar控件
         ActionBarDrawerToggle barDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
@@ -82,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentAdapter fragmentAdapter = new FragmentAdapter(fragments, getSupportFragmentManager());
         //给中间滑动页设置适配器
         viewPager.setAdapter(fragmentAdapter);
+
+
         //登录以后设置抽屉显示的用户名
         NavigationView nav_view=(NavigationView)findViewById(R.id.navigation_view);
         View headerView=nav_view.getHeaderView(0);
@@ -139,5 +223,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
+
 }
