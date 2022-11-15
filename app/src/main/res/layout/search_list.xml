@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/mzListCover"
+        android:layout_width="64dp"
+        android:layout_height="64dp"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/mzListCover"
+        android:layout_marginLeft="20dp">
+
+
+        <TextView
+            android:id="@+id/mzListName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="境界線"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/mzListSinger"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:text="66666"
+            android:maxLines="1"
+            android:textStyle="italic"
+            android:layout_below="@+id/mzListName"
+            android:textColor="#5A5D65"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/mzListDownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="下载"
+        android:textSize="12sp"
+        android:background="@drawable/buttonshape"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"/>
+
+
+
+</RelativeLayout>

@@ -7,7 +7,9 @@ import org.litepal.crud.LitePalSupport;
 public class UserInfo extends LitePalSupport {
     private String userName;                  //用户名
     private String userPwd;                   //用户密码
-    private long id;                       //用户ID号
+    private String userId;                       //用户ID号
+
+
 
     public String getUserName() {
         return userName;
@@ -25,20 +27,21 @@ public class UserInfo extends LitePalSupport {
         this.userPwd = userPwd;
     }
 
-    public long getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUserId(String id) {
+        this.userId = id;
     }
 
-    public UserInfo(String userName, String userPwd, long id) {
+    public UserInfo(String userName, String userPwd, String usreId) {
         this.userName = userName;
         this.userPwd = userPwd;
-        this.id = id;
+        this.userId = usreId;
     }
 
     public UserInfo() {
     }
+
 }

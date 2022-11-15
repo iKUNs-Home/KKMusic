@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FFCDCD">
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,4 +19,15 @@
             android:layout_height="match_parent"
             android:listSelector="#fefefe" />
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/newitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="33dp"
+        android:layout_marginBottom="33dp"
+        app:backgroundTint="#FFB6B6"
+        android:src="@drawable/newitem" />
 </RelativeLayout>

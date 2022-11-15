@@ -54,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             String userPwd=mPwd.getText().toString().trim();
             String userPwd2=mPwd2.getText().toString().trim();
             //获取当前时间作为id
-            long id=System.currentTimeMillis();
+            String id= String.valueOf(System.currentTimeMillis());
             //判断确认密码是否与密码相同
             if(!userPwd.equals(userPwd2)){
                 Toast.makeText(this, "两次输入密码不同", Toast.LENGTH_SHORT).show();

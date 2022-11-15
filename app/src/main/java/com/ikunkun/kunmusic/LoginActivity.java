@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button mRegisterButton;                   //注册按钮
     private Button mLoginButton;                      //登录按钮
     private CheckBox mRememberCheck;
-
+    public static UserInfo tempuser=new UserInfo();
     public void onCreate(Bundle savedInstanceState) {
         LitePal.initialize(this);
         super.onCreate(savedInstanceState);
@@ -60,6 +60,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String user = mAccount.getText().toString().trim();
             //获取密码
             String pwd = mPwd.getText().toString().trim();
+
+            tempuser.setUserName(user);
             List<UserInfo> list = LitePal.where(" userName = ? and userPwd = ?", user, pwd).find(UserInfo.class);
             //登录成功
             if (list.size() > 0) {
