@@ -10,12 +10,86 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/ui_main_shapemine"
         android:orientation="vertical">
-<Button
-    android:id="@+id/testlogin"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="登录"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="20dp"
+        android:elevation="3dp"
+        android:background="@drawable/ui_second_shape"
+        android:orientation="horizontal">
+        <com.ikunkun.kunmusic.tools.XCRoundImageView
+            android:id="@+id/mine_iv"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/default_ava"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp">
+            <TextView
+                android:id="@+id/mine_name"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:text="Dynammor"
+                android:textSize="23dp"
+                android:textColor="#000000"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/mine_id"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="ID: 123456"
+                android:textSize="15dp"
+                android:textColor="#979797"/>
+        </LinearLayout>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="20dp"
+            android:elevation="3dp"
+            android:background="@drawable/ui_second_shape">
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/mine_ilike"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_marginTop="20dp"
+            android:elevation="3dp"
+            android:background="@drawable/ui_second_shape"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:text="♥"
+                android:textSize="33dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="我喜欢的音乐"
+                android:textSize="17dp"
+                android:textColor="#000000" />
+                <TextView
+                    android:id="@+id/mine_ilikenum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="🏀 59首"
+                    android:textSize="15dp" />
+        </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

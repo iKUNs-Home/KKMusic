@@ -71,7 +71,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             intent.putExtra("userName",user);
             startActivity(intent);
             Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-
                 //设置用户名
 //                setContentView(R.layout.nav_header);
 //                System.out.println(user);

@@ -11,7 +11,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/ui_main_shape"
         android:orientation="vertical">
         <ListView
             android:id="@+id/listview"
@@ -19,6 +19,7 @@
             android:layout_height="match_parent"
             android:listSelector="#fefefe" />
     </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/newitem"
         android:layout_width="wrap_content"
@@ -28,6 +29,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="33dp"
         android:layout_marginBottom="33dp"
-        app:backgroundTint="#FFB6B6"
-        android:src="@drawable/newitem" />
+        android:src="@drawable/ic_add_foreground"
+        app:backgroundTint="#FFB6B6" />
 </RelativeLayout>

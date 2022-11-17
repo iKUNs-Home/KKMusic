@@ -28,7 +28,9 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".PostingActivity"
+            android:exported="false" />
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
 

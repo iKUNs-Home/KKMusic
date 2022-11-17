@@ -12,7 +12,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/ui_main_shape"
         android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,13 +26,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:text="      🐔"
+            android:text="     🐔"
             android:textSize="80dp"
             />
     </LinearLayout>
         <RelativeLayout
             android:id="@+id/login_view"
-            android:layout_width="400dp"
+            android:layout_width="match_parent"
             android:layout_height="800dp"
             android:layout_centerInParent="true">
 

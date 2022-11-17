@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,21 +29,38 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     @Override
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mine,container,false);
+        View view = inflater.inflate(R.layout.fragment_mine, container, false);
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Button login=(Button)getActivity().findViewById(R.id.testlogin);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),LoginActivity.class) ;
-                startActivity(intent);
-            }
-        });
+        if(LoginActivity.tempuser.getUserName()!=null) {
+            TextView mine_name=getActivity().findViewById(R.id.mine_name);
+            mine_name.setText(LoginActivity.tempuser.getUserName());
+            LinearLayout Ilike = getActivity().findViewById(R.id.mine_ilike);
+            Ilike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "点击事件", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            TextView mine_name=getActivity().findViewById(R.id.mine_name);
+            TextView mine_id=getActivity().findViewById(R.id.mine_id);
+            TextView mine_ilikenum=getActivity().findViewById(R.id.mine_ilikenum);
+            mine_ilikenum.setText("\uD83C\uDFC0 0首");
+            mine_id.setText("Kunmusic's 游客");
+            mine_name.setText("点击登录");
+            mine_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(getActivity(),LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
     }
     @Override
     public void onClick(View view) {

@@ -26,12 +26,15 @@ import org.litepal.tablemanager.Connector;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class CommunityFragment extends Fragment implements View.OnClickListener{
 //    Connector.getDatabase();
 //    List<CommunityMessageInfo> CommunityMessageInfo = DataSupport.findAll(CommunityMessageInfo.class);
     private android.widget.ListView ListView;
+    Random r = new Random();
     List<CommunityMessageInfo> messageList  = LitePal.findAll(CommunityMessageInfo.class);
+    private static int[] image={R.drawable.default_ava,R.drawable.default_ava2,R.drawable.default_ava3,R.drawable.default_ava4};
 //    private static String[] userName={"dynammor","用户1","用户2","用户3"};
 //    private static String[] massage={"I'am KunKun's fans,I use KunMusic","用户1","用户2","用户3"};
     @Nullable
@@ -90,7 +93,8 @@ public class CommunityFragment extends Fragment implements View.OnClickListener{
             dongtai_tv_time.setText(messageList.get(i).getMessageTime());
             nameview.setText(messageList.get(i).getUserName());
             content.setText(messageList.get(i).getMessage());
-            dongtai_portrait.setBackgroundResource(R.drawable.default_ava);
+            int temp = r.nextInt(3);
+            dongtai_portrait.setImageResource(image[temp]);
             return view;
         }
     }
