@@ -27,14 +27,17 @@ public class PostingActivity  extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         String getmessage=message.getText().toString().trim();
+//        获取账户信息
         CommunityMessageInfo CommunityMessageInfo=new CommunityMessageInfo();
         CommunityMessageInfo.setMessage(getmessage);
+//        判断是否登录账号，否则使用游客身份发帖
         if(LoginActivity.tempuser.getUserName()!=null) {
             CommunityMessageInfo.setUserName(LoginActivity.tempuser.getUserName());
         }
         else{
             CommunityMessageInfo.setUserName("KunMusic's 游客");
         }
+//        发帖时间
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         CommunityMessageInfo.setMessageTime(date.format(formatter));

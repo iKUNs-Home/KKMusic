@@ -84,7 +84,7 @@ public class SearchActivity extends AppCompatActivity {
      * 使用okhttp访问url接收返回值
      */
     public void musicAPISearch(String keyword) {
-        String serverUrl = "http://172.17.115.69:3000/";
+        String serverUrl = "http://172.17.122.134:4000/";
 
         //fullUrl最终访问的url
         String fullUrl = serverUrl + "search?keywords=" + keyword;

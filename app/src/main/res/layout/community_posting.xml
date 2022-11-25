@@ -12,7 +12,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/ui_main_shape"
         android:orientation="vertical">
         <EditText
             android:id="@+id/posting_message"
@@ -24,9 +24,6 @@
             android:gravity="top"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="40dp"
             android:background="@drawable/textshape"
             android:textColor="#393939" />
         <Button
@@ -35,8 +32,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/buttonshape"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="40dp"
             android:text="发布"
             android:textColor="#ffffff"
             android:textSize="15dp"/>

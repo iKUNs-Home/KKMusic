@@ -32,7 +32,9 @@ public class CommunityFragment extends Fragment implements View.OnClickListener{
 //    Connector.getDatabase();
 //    List<CommunityMessageInfo> CommunityMessageInfo = DataSupport.findAll(CommunityMessageInfo.class);
     private android.widget.ListView ListView;
+//    头像随机
     Random r = new Random();
+//    从数据库获取动态数据
     List<CommunityMessageInfo> messageList  = LitePal.findAll(CommunityMessageInfo.class);
     private static int[] image={R.drawable.default_ava,R.drawable.default_ava2,R.drawable.default_ava3,R.drawable.default_ava4};
 //    private static String[] userName={"dynammor","用户1","用户2","用户3"};
@@ -46,8 +48,10 @@ public class CommunityFragment extends Fragment implements View.OnClickListener{
     }
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+//        反转列表，按时间倒序输出
         Collections.reverse (messageList);
         ListView=getActivity().findViewById(R.id.listview);
+//        适配器
         MyBaseAdapter mAdapter= new MyBaseAdapter();
         ListView.setAdapter(mAdapter);
         FloatingActionButton fab =getActivity().findViewById(R.id.newitem);

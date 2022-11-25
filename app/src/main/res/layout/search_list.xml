@@ -3,51 +3,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/mzListCover"
-        android:layout_width="64dp"
-        android:layout_height="64dp"/>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/mzListCover"
-        android:layout_marginLeft="20dp">
-
-
-        <TextView
-            android:id="@+id/mzListName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="境界線"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:textColor="@color/black"
-            android:textSize="25sp" />
-
-        <TextView
-            android:id="@+id/mzListSinger"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:text="66666"
-            android:maxLines="1"
-            android:textStyle="italic"
-            android:layout_below="@+id/mzListName"
-            android:textColor="#5A5D65"
-            android:textSize="15sp" />
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/mzListDownload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+    <LinearLayout
+        android:id="@+id/mine_ilike"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/buttonshape"
-        android:text="下载"
-        android:textSize="12sp" />
+        android:layout_marginRight="10dp"
+        android:background="@drawable/ui_second_shape"
+        android:clickable="true"
+        android:elevation="3dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
 
+        <com.ikunkun.kunmusic.tools.XCRoundImageView
+            android:id="@+id/mzListCover"
+            android:layout_width="43dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/default_ava" />
+
+        <LinearLayout
+            android:layout_width="220dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/mzListName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="境界線"
+                android:textColor="#000000"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/mzListSinger"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="66666"
+                android:textSize="13dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/mzListDownload"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/more" />
+        </LinearLayout>
+    </LinearLayout>
 
 
 </RelativeLayout>

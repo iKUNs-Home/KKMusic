@@ -9,6 +9,15 @@ public class UserInfo extends LitePalSupport {
     private String userPwd;                   //用户密码
     private String userId;                       //用户ID号
 
+    public String[] getiLikeList() {
+        return iLikeList;
+    }
+
+    public void setiLikeList(String[] iLikeList) {
+        this.iLikeList = iLikeList;
+    }
+
+    private String[] iLikeList;                 //我喜欢的音乐
 
 
     public String getUserName() {

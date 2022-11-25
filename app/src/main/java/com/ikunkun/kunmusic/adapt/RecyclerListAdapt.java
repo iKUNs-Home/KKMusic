@@ -36,7 +36,7 @@ public class RecyclerListAdapt extends RecyclerView.Adapter {
             mzCover = itemView.findViewById(R.id.mzListCover);
             mzName = itemView.findViewById(R.id.mzListName);
             mzSinger = itemView.findViewById(R.id.mzListSinger);
-            mzDownload = itemView.findViewById(R.id.mzListDownload);
+//            mzDownload = itemView.findViewById(R.id.mzListDownload);
             listView = itemView;
         }
     }
@@ -64,7 +64,12 @@ public class RecyclerListAdapt extends RecyclerView.Adapter {
             网络图片不能加载问题(可加载https不能加载http)：
                 需在AndroidManifest.xml文件下添加安全协议
          **/
-        Glide.with(listView).load(musicInfoList.get(position).getPageImg()).into(mzCover);
+        if(musicInfoList.get(position).getBmpDraw()!=null){
+            mzCover.setImageDrawable(musicInfoList.get(position).getBmpDraw());
+        }else {
+            System.out.println("null");
+            Glide.with(listView).load(musicInfoList.get(position).getPageImg()).into(mzCover);
+        }
         mzName.setText(musicInfoList.get(position).getMusicName());
         mzSinger.setText(musicInfoList.get(position).getMusicSinger());
     }

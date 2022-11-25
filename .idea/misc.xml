@@ -29,9 +29,10 @@
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/textshape.xml" value="0.1475" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/ui_main_shape.xml" value="0.2305" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/ui_main_shapemine.xml" value="0.2305" />
+        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/ui_second_shape.xml" value="0.244" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/ui_shape.xml" value="0.2305" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/activity_main.xml" value="0.18958333333333333" />
-        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/activity_search.xml" value="0.23802083333333332" />
+        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/activity_search.xml" value="0.36342592592592593" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/community_list.xml" value="0.25" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/community_posting.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_about.xml" value="0.1125" />
@@ -39,11 +40,11 @@
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_home.xml" value="0.22083333333333333" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_home_app.xml" value="0.1828125" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_home_local.xml" value="0.161231884057971" />
-        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_mine.xml" value="0.1" />
+        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_mine.xml" value="0.264" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/login.xml" value="0.2" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/nav_header.xml" value="0.16" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/register.xml" value="0.264" />
-        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/search_list.xml" value="0.17346014492753623" />
+        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/search_list.xml" value="0.2164855072463768" />
       </map>
     </option>
   </component>
