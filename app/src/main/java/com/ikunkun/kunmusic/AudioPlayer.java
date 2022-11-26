@@ -31,6 +31,7 @@ import com.ikunkun.kunmusic.service.MusicService;
 import com.ikunkun.kunmusic.tools.ImageFilter;
 import com.ikunkun.kunmusic.views.apCoverFragment;
 import com.ikunkun.kunmusic.views.apLyricFragment;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,11 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
     private ServiceConnection mcn;
 
     private static ViewPager apViewPager;
+    public void setStatusBarTranslucent() {
+        StatusBarUtil.setTranslucentForImageViewInFragment(this,
+                0, null);
+        StatusBarUtil.setLightMode(this);
+    }
 
     public static Handler handler2 = new Handler() {
         @Override
@@ -83,6 +89,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarTranslucent();
         setContentView(R.layout.activity_audio_player);
 
         apBlurBK = findViewById(R.id.apBlurBackground);

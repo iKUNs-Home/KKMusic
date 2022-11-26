@@ -46,6 +46,7 @@ import com.ikunkun.kunmusic.views.CommunityFragment;
 import com.ikunkun.kunmusic.views.HomeFragment;
 import com.ikunkun.kunmusic.views.MineFragment;
 import com.ikunkun.kunmusic.views.apCoverFragment;
+import com.jaeger.library.StatusBarUtil;
 import com.xiaoyouProject.searchbox.SearchFragment;
 import com.xiaoyouProject.searchbox.custom.IOnSearchClickListener;
 import com.xiaoyouProject.searchbox.entity.CustomLink;
@@ -66,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection mcn;
     private MusicService.MusicControl musicControl;
     private apCoverFragment.controlAnimator animatorControl;
+    public void setStatusBarTranslucent() {
+        StatusBarUtil.setTranslucentForImageViewInFragment(this,
+                0, null);
+        StatusBarUtil.setLightMode(this);
+    }
+
 
     public static Handler handler = new Handler() {
         @Override

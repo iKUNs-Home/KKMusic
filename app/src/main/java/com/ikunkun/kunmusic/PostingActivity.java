@@ -2,6 +2,7 @@ package com.ikunkun.kunmusic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,8 +45,11 @@ public class PostingActivity  extends AppCompatActivity implements View.OnClickL
         boolean flag = CommunityMessageInfo.save();
         if (flag) {
             Toast.makeText(this,"发布成功", Toast.LENGTH_SHORT).show();
-            Intent intent_Posting_to_Community = new Intent(PostingActivity.this, CommunityFragment.class);    //切换User Activity至Login Activity
-            startActivity(intent_Posting_to_Community);
+//            Intent intent_Posting_to_Community = new Intent(PostingActivity.this, CommunityFragment.class);    //切换User Activity至Login Activity
+//            startActivity(intent_Posting_to_Community);
+            Message msg = CommunityFragment.handler.obtainMessage();
+            msg.what=1;
+            CommunityFragment.handler.sendMessage(msg);
             finish();
         }else{
             Toast.makeText(this,"发布失败", Toast.LENGTH_SHORT).show();

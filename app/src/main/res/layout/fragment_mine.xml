@@ -2,16 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFCDCD">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/ui_main_shapemine"
-        android:orientation="vertical">
+    android:background="@drawable/ui_main_shapemine"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
@@ -51,7 +43,7 @@
             android:id="@+id/mine_ilike"
             android:layout_width="match_parent"
             android:layout_height="85dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:elevation="3dp"
             android:background="@drawable/ui_second_shape"
             android:clickable="true"
@@ -86,7 +78,7 @@
             android:id="@+id/mine_music"
             android:layout_width="match_parent"
             android:layout_height="85dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:elevation="3dp"
             android:background="@drawable/ui_second_shape"
             android:clickable="true"
@@ -118,7 +110,7 @@
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:elevation="3dp"
         android:background="@drawable/ui_second_shape"
         android:orientation="vertical">
@@ -134,6 +126,5 @@
                 android:textSize="33dp"/>
         </LinearLayout>
 
-    </LinearLayout>
     </LinearLayout>
 </LinearLayout>

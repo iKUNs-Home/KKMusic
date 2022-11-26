@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pcb"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#938E8E">
-
-    <RelativeLayout
-        android:id="@+id/pcb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
+    android:background="@drawable/ui_main_shape">
         <RelativeLayout
             android:id="@+id/rl_progress"
             android:layout_width="wrap_content"
@@ -19,14 +14,13 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/pcb_cover"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="@drawable/cover1"
                 android:padding="1dp"
                 app:shapeAppearance="@style/CircleStyle"
                 app:strokeColor="@color/white"
                 app:strokeWidth="2dp" />
-
             <com.ikunkun.kunmusic.views.MusicRoundProgressView
                 android:id="@+id/music_progress"
                 android:layout_width="48dp"
@@ -37,29 +31,31 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/rl_progress">
-
+            android:layout_toRightOf="@+id/rl_progress"
+            android:orientation="horizontal">
             <TextView
                 android:id="@+id/pcb_songName"
+                android:layout_marginTop="18dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="境界線"
-                android:textColor="@color/white"
-                android:textSize="22sp" />
-
+                android:textColor="@color/black"
+                android:textSize="20sp" />
             <TextView
                 android:id="@+id/pcb_singName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="10dp"
                 android:layout_below="@+id/pcb_songName"
                 android:text="amazarashi"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </RelativeLayout>
+                android:textColor="#BDBDBD"
+                android:textSize="18sp" />
+        </LinearLayout>
 
 
         <ImageButton
@@ -70,7 +66,4 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:background="@drawable/pause" />
-
-    </RelativeLayout>
-
 </RelativeLayout>

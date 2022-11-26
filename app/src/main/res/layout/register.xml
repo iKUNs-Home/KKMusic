@@ -2,37 +2,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFCDCD"
+    android:background="@drawable/ui_main_shapemine">
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".RegisterActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/ui_second_shape"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:background="#FFFFFF"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:text="      🐔"
-                android:textSize="80dp"
-                />
+                android:textSize="80dp" />
         </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/login_view"
-            android:layout_width="400dp"
+            android:layout_width="match_parent"
             android:layout_height="800dp"
             android:layout_centerInParent="true">
 
@@ -45,7 +45,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="100dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/buttonshape"
                 android:text="注册"
                 android:textColor="#ffffff"
@@ -60,7 +60,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="30dp"
                 android:background="@drawable/textshape"
                 android:ems="10"
                 android:hint="请输入您的密码"
@@ -76,7 +76,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="30dp"
                 android:background="@drawable/textshape"
                 android:ems="10"
                 android:hint="请确认您的密码"
@@ -91,7 +91,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="30dp"
                 android:background="@drawable/textshape"
                 android:hint="请输入您的鲲名"
                 android:inputType="textPersonName"
