@@ -10,15 +10,28 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 
+import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.app.ActivityOptions;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
+import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView;
 
@@ -27,10 +40,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.ikunkun.kunmusic.adapt.FragmentAdapter;
 import com.ikunkun.kunmusic.adapt.RecyclerListAdapt;
+import com.ikunkun.kunmusic.service.MusicService;
 import com.ikunkun.kunmusic.views.AboutFragment;
 import com.ikunkun.kunmusic.views.CommunityFragment;
 import com.ikunkun.kunmusic.views.HomeFragment;
 import com.ikunkun.kunmusic.views.MineFragment;
+import com.ikunkun.kunmusic.views.apCoverFragment;
 import com.xiaoyouProject.searchbox.SearchFragment;
 import com.xiaoyouProject.searchbox.custom.IOnSearchClickListener;
 import com.xiaoyouProject.searchbox.entity.CustomLink;
@@ -39,13 +54,101 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bnView;    //底部导航栏
     ViewPager viewPager;            //中间滑动页
     Toolbar toolbar;                //顶部工具栏
     DrawerLayout drawerLayout;      //左边滑动抽屉
+
+    private static ImageButton pcbPlay;
+    private Intent mIntent;
+    private ServiceConnection mcn;
+    private MusicService.MusicControl musicControl;
+    private apCoverFragment.controlAnimator animatorControl;
+
+    public static Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case 107:
+                    pcbPlay.setBackgroundResource(R.drawable.play);
+                    System.out.println("107");
+                    break;
+                case 108:
+                    pcbPlay.setBackgroundResource(R.drawable.pause);
+                    System.out.println("108");
+                    break;
+            }
+        }
+    };
+
+    public void pcbInit() {
+        mIntent = new Intent(this, MusicService.class);
+        mcn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                musicControl = (MusicService.MusicControl) iBinder;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+//        startService(mIntent);
+        if (!isServiceRunning(getApplicationContext(), "MusicService")) {
+            bindService(mIntent, mcn, BIND_AUTO_CREATE);
+        }
+        pcbPlay = findViewById(R.id.pcb_play);
+        animatorControl = new apCoverFragment.controlAnimator();
+        pcbPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicControl.play();
+                Message msg = AudioPlayer.handler2.obtainMessage();
+                if (musicControl.isPlaying()) {
+                    pcbPlay.setBackgroundResource(R.drawable.play);
+                    msg.what = 207;
+                    if (animatorControl.isPausedAnimator()) {
+                        animatorControl.resumeAnimator();
+                    } else {
+                        animatorControl.startAnimator();
+                    }
+                } else {
+                    msg.what = 208;
+                    pcbPlay.setBackgroundResource(R.drawable.pause);
+                    animatorControl.pauseAnimator();
+                }
+                AudioPlayer.handler2.sendMessage(msg);
+            }
+        });
+
+        RelativeLayout pcb = (RelativeLayout) findViewById(R.id.pcb);
+        pcb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent in = new Intent(MainActivity.this, AudioPlayer.class);
+                startActivity(in);
+            }
+        });
+    }
+
+    public boolean isServiceRunning(Context mContext, String className) {
+        boolean isRunning = false;
+        ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> serviceInfoList = activityManager.getRunningServices(30);
+        if (!(serviceInfoList.size() > 0)) {
+            return false;
+        }
+        for (int i = 0; i < serviceInfoList.size(); i++) {
+            if (serviceInfoList.get(i).service.getClassName().equals(className)) {
+                isRunning = true;
+                break;
+            }
+        }
+        return isRunning;
+    }
 
 
     @Override
@@ -68,12 +171,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-
-
         //设置主布局
         setContentView(R.layout.activity_main);
 
+        pcbInit();
 
         //获取布局控件等的id
         bnView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
@@ -98,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("keyword = " + keyword);
                 //开启搜索列表activity，同时向其传送搜索关键词
                 Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
-                searchIntent.putExtra("keyword",keyword);
+                searchIntent.putExtra("keyword", keyword);
                 startActivity(searchIntent);
             }
 
@@ -165,16 +266,16 @@ public class MainActivity extends AppCompatActivity {
         //给中间滑动页设置适配器
         viewPager.setAdapter(fragmentAdapter);
 
-
         //登录以后设置抽屉显示的用户名
-        NavigationView nav_view=(NavigationView)findViewById(R.id.navigation_view);
-        View headerView=nav_view.getHeaderView(0);
-        TextView nav_name=(TextView)headerView.findViewById(R.id.nav_name);;
-        Intent getData=getIntent();
+        NavigationView nav_view = (NavigationView) findViewById(R.id.navigation_view);
+        View headerView = nav_view.getHeaderView(0);
+        TextView nav_name = (TextView) headerView.findViewById(R.id.nav_name);
+        ;
+        Intent getData = getIntent();
         //getExtras()得到intent所附带的值
-        String userName=getData.getStringExtra("userName");
+        String userName = getData.getStringExtra("userName");
         //通过key获取相应的value
-        if(userName!=null) {
+        if (userName != null) {
             nav_name.setText(userName);
         }
         //给底部导航栏设置 点击事件监听
@@ -190,6 +291,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.tab_mine:
                         viewPager.setCurrentItem(1);
+                        Intent in = new Intent(MainActivity.this, AudioPlayer.class);
+                        startActivity(in);
                         break;
                     case R.id.tab_community:
                         viewPager.setCurrentItem(2);
@@ -202,7 +305,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
 
 
         //ViewPager 滑动事件监听

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AudioPlayer">
+
+    <ImageView
+        android:id="@+id/apBlurBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <RelativeLayout
+        android:id="@+id/topRl"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <ImageButton
+            android:id="@+id/ib_back"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/apback" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/line_split" />
+
+
+    </RelativeLayout>
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/apCover"-->
+    <!--        android:layout_width="200dp"-->
+    <!--        android:layout_height="200dp"-->
+    <!--        android:layout_centerInParent="true"-->
+    <!--        android:src="@drawable/cover1" />-->
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/centerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomRl"
+        android:layout_below="@+id/topRl" />
+
+    <RelativeLayout
+        android:id="@+id/bottomRl"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:id="@+id/progressRl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/functionRl"
+            android:layout_marginBottom="15dp">
+
+            <TextView
+                android:id="@+id/apProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="00:00"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <SeekBar
+                android:id="@+id/apSeekBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@+id/apTotal"
+                android:layout_toRightOf="@+id/apProgress" />
+
+            <TextView
+                android:id="@+id/apTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="00:00"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/functionRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp">
+
+            <ImageButton
+                android:id="@+id/ib_previous"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/ib_pause"
+                android:background="@drawable/previous" />
+
+            <ImageButton
+                android:id="@+id/ib_pause"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/pause" />
+
+            <ImageButton
+                android:id="@+id/ib_next"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/ib_pause"
+                android:background="@drawable/next" />
+        </RelativeLayout>
+
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/apCover"-->
+        <!--            android:layout_width="200dp"-->
+        <!--            android:layout_height="200dp"-->
+        <!--            android:layout_centerInParent="true"-->
+        <!--            android:src="@drawable/cover1" />-->
+
+
+    </RelativeLayout>
+
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_centerInParent="true">-->
+
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_centerHorizontal="true"-->
+    <!--            android:orientation="horizontal">-->
+
+    <!--            <Button-->
+    <!--                android:id="@+id/apBofan"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="播放" />-->
+
+    <!--            <Button-->
+    <!--                android:id="@+id/apZhangting"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="暂停" />-->
+
+    <!--            <Button-->
+    <!--                android:id="@+id/apJixu"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="继续" />-->
+
+    <!--            <Button-->
+    <!--                android:id="@+id/apTuichu"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="退出" />-->
+    <!--        </LinearLayout>-->
+
+    <!--    </RelativeLayout>-->
+</RelativeLayout>
