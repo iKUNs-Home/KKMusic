@@ -76,6 +76,13 @@ public class SearchActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(musicInfoList);
+//        recyclerListAdapt.setListener(new RecyclerListAdapt.OnItemClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                System.out.println(66666);
+//                Toast.makeText(SearchActivity.this, "6666", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         recyclerView.setAdapter(recyclerListAdapt);
     }
 
@@ -84,7 +91,7 @@ public class SearchActivity extends AppCompatActivity {
      * 使用okhttp访问url接收返回值
      */
     public void musicAPISearch(String keyword) {
-        String serverUrl = "http://172.17.15.16:4000/";
+        String serverUrl = "http://172.20.10.2:3000/";
 
         //fullUrl最终访问的url
         String fullUrl = serverUrl + "search?keywords=" + keyword;
@@ -120,7 +127,7 @@ public class SearchActivity extends AppCompatActivity {
                 for (int i = 0; i < result.size(); i++) {
                     JSONObject song = result.getJSONObject(i);
                     final JSONObject music = new JSONObject();
-                    final int id = song.getIntValue("id");//歌曲id
+                    long id = song.getLongValue("id");//歌曲id
                     music.put("musicId", id);
 //            ids.append("," + id);
                     music.put("songName", song.getString("name"));//歌曲名
@@ -182,6 +189,7 @@ public class SearchActivity extends AppCompatActivity {
         System.out.println(music.get("musicId"));
 
         MusicInfo musicInfo = new MusicInfo();
+        musicInfo.setMusicId(Long.toString(music.getLongValue("musicId")));
         musicInfo.setMusicName(music.getString("songName"));
         musicInfo.setPageImg(music.getString("songPicUrl"));
         musicInfo.setMusicSinger(AllSinger.toString());

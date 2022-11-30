@@ -2,7 +2,9 @@ package com.ikunkun.kunmusic.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -15,6 +17,7 @@ import com.ikunkun.kunmusic.AudioPlayer;
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.views.MusicRoundProgressView;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,6 +39,24 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
         mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.jjx);
+//        mPlayer = new MediaPlayer();
+//        String url = "http://m701.music.126.net/20221130184826/aaadbc481b4d281241baaa8101cb252e/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/8401700683/e96a/c59c/453c/401771d515f981fc8d991109ef088f5c.mp3";
+//        try {
+//            mPlayer.setDataSource(url);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        mPlayer.prepareAsync();
+//        mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mediaPlayer) {
+//                System.out.println("Voice文件准备完毕");
+//                System.out.println("Voice文件时长 " + mPlayer.getDuration() / 1000 + " ");
+////                mPlayer.start();
+//            }
+//        });
+//        mPlayer = new MediaPlayer();
     }
 
     @Override
@@ -82,6 +103,31 @@ public class MusicService extends Service {
     }
 
     public class MusicControl extends Binder {
+
+        public void ReSetMusic(String musicUrl) {
+            System.out.println("Service " + musicUrl);
+            if (mPlayer.isPlaying()) mPlayer.stop();
+            mPlayer.reset();
+            mPlayer.release();
+            mPlayer = new MediaPlayer();
+            try {
+                mPlayer.setDataSource(musicUrl);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mPlayer.prepareAsync();
+            mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    System.out.println("Voice文件准备完毕");
+                    System.out.println("Voice文件时长 " + mPlayer.getDuration() / 1000 + " ");
+                    Message msg = AudioPlayer.handler3.obtainMessage();
+                    AudioPlayer.handler3.sendMessage(msg);
+                }
+            });
+        }
+
         public void play() {
             try {
                 if (!mPlayer.isPlaying()) {

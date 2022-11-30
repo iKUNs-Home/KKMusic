@@ -2,20 +2,31 @@ package com.ikunkun.kunmusic.adapt;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.ikunkun.kunmusic.AudioPlayer;
+import com.ikunkun.kunmusic.MainActivity;
 import com.ikunkun.kunmusic.LoginActivity;
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.comn.MusicInfo;
@@ -23,22 +34,31 @@ import com.ikunkun.kunmusic.comn.UserInfo;
 
 import org.litepal.LitePal;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnClickListener{
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnClickListener {
     ImageView mzListDownload;
     ImageView mzCover;
     TextView mzName;
     TextView mzSinger;
+    //    Button mzDownload;
     List<MusicInfo> musicInfoList;
     View listView;
     Context context;
+    LinearLayout songItem;
 
     @Override
     public void onClick(View view) {
         int position = (int) view.getTag();
-        initPopWindow(view,position);
+        initPopWindow(view, position);
     }
 
     //定义Adapter首先需要一个ViewHolder（用来装布局控件，连接布局控件的容器）
@@ -50,8 +70,10 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
             mzCover = itemView.findViewById(R.id.mzListCover);
             mzName = itemView.findViewById(R.id.mzListName);
             mzSinger = itemView.findViewById(R.id.mzListSinger);
+//            mzDownload = itemView.findViewById(R.id.mzListDownload);
             listView = itemView;
-            mzListDownload=itemView.findViewById(R.id.mzListDownload);
+            mzListDownload = itemView.findViewById(R.id.mzListDownload);
+            songItem = itemView.findViewById(R.id.each_songItem);
         }
     }
 
@@ -65,7 +87,7 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context=parent.getContext();
+        context = parent.getContext();
         LitePal.initialize(context);
         View musicView = View.inflate(parent.getContext(), R.layout.search_list, null);
         mzListHolder mzList = new mzListHolder(musicView);
@@ -74,7 +96,7 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
         return mzList;
     }
 
-    private void initPopWindow(View v,int position) {
+    private void initPopWindow(View v, int position) {
         View view = LayoutInflater.from(v.getContext()).inflate(R.layout.item_popip, null, false);
         Button btn_xixi = (Button) view.findViewById(R.id.btn_xixi);
         Button btn_hehe = (Button) view.findViewById(R.id.btn_hehe);
@@ -125,9 +147,9 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
                     }
                     if (flag == 1) {
                         Toast.makeText(context, "已在收藏列表中~", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
 
-                        UserInfo userInfo=new UserInfo();
+                        UserInfo userInfo = new UserInfo();
                         userInfo.setUserName(list.get(0).getUserName());
                         userInfo.setUserPwd(list.get(0).getUserPwd());
                         userInfo.setUserId(list.get(0).getUserId());
@@ -139,12 +161,12 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
                         System.out.println(musicInfoList.get(position).getMusicName() + "---" + musicInfoList.get(position).getMusicSinger());
 
 //                    歌名
-                        userInfo.setIlikename(userInfo.getIlikename()+"---"+musicInfoList.get(position).getMusicName());
+                        userInfo.setIlikename(userInfo.getIlikename() + "---" + musicInfoList.get(position).getMusicName());
 //                    歌手
-                        userInfo.setIlikesinger(userInfo.getIlikesinger()+"---"+musicInfoList.get(position).getMusicSinger());
+                        userInfo.setIlikesinger(userInfo.getIlikesinger() + "---" + musicInfoList.get(position).getMusicSinger());
 //                    url
 //                      userInfo.setIlikes(userInfo.getIlikesinger()+"---"+musicInfoList.get(position).getMusicSinger());
-                        System.out.println("length:"+userInfo.getIlikesinger().split("---").length+"user:"+userInfo.getUserName());
+                        System.out.println("length:" + userInfo.getIlikesinger().split("---").length + "user:" + userInfo.getUserName());
 //                        System.out.println("test3"+userInfo.getIlikename());
 //                    保存新的数据
                         userInfo.save();
@@ -163,19 +185,121 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
     //这个函数用来设置布局控件中每个项目(通过position)的数据
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int pos = position;
         /**
-            网络图片不能加载问题(可加载https不能加载http)：
-                需在AndroidManifest.xml文件下添加安全协议
+         网络图片不能加载问题(可加载https不能加载http)：
+         需在AndroidManifest.xml文件下添加安全协议
          **/
-        if(musicInfoList.get(position).getBmpDraw()!=null){
+        if (musicInfoList.get(position).getBmpDraw() != null) {
             mzCover.setImageDrawable(musicInfoList.get(position).getBmpDraw());
-        }else {
+        } else {
             System.out.println("null");
             Glide.with(listView).load(musicInfoList.get(position).getPageImg()).into(mzCover);
         }
         mzName.setText(musicInfoList.get(position).getMusicName());
         mzSinger.setText(musicInfoList.get(position).getMusicSinger());
         mzListDownload.setTag(position);
+
+
+        songItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                System.out.println(666);
+                if (musicInfoList.get(pos).getMusicId() != null) {
+                    MusicSearchByID(musicInfoList.get(pos).getMusicId(), pos);
+                }else {
+                    MusicLocal(musicInfoList.get(pos).getMusicPath(),pos);
+                }
+
+            }
+        });
+    }
+
+    public void MusicLocal(String localPath,int position){
+        Message msg = AudioPlayer.musicSetHandler.obtainMessage();
+        Bundle bundle = new Bundle();
+        bundle.putString("musicPath", localPath);
+        msg.setData(bundle);
+        msg.what = 310;
+        AudioPlayer.musicSetHandler.sendMessage(msg);
+
+        Intent ap = new Intent(context, AudioPlayer.class);
+        context.startActivity(ap);
+    }
+
+    public void MusicSearchByID(String id, int position) {
+        String serverUrl = "http://172.20.10.2:3000/";
+
+        //fullUrl最终访问的url
+        String fullUrl = serverUrl + "song/url?id=" + id;
+        System.out.println("请求的url=" + fullUrl);
+
+        //1.创建OkHttpClient对象
+        OkHttpClient okHttpClient = new OkHttpClient();
+        //2.创建Request对象，设置一个url地址（百度地址）,设置请求方式。
+        Request request = new Request.Builder().url(fullUrl).method("GET", null).build();
+        //3.创建一个call对象,参数就是Request请求对象
+        Call call = okHttpClient.newCall(request);
+        //4.请求加入调度，重写回调方法
+        call.enqueue(new Callback() {
+            //请求失败执行的方法
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //向handle发送消息
+                Message msg = AudioPlayer.musicSetHandler.obtainMessage();
+                msg.what = 301;
+                AudioPlayer.musicSetHandler.sendMessage(msg);
+            }
+
+            //请求成功执行的方法
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String body = response.body().string();
+                Gson gson = new Gson();
+                JSONObject responseJSON = gson.fromJson(body, JSONObject.class);
+                JSONArray result = responseJSON.getJSONArray("data");
+//                System.out.println(result);
+                String url = null;
+                //遍历搜索结果
+                for (int i = 0; i < result.size(); i++) {
+                    JSONObject song = result.getJSONObject(i);
+//                    final JSONObject music = new JSONObject();
+//                    final int id = song.getIntValue("id");//歌曲id
+//                    music.put("musicId", id);
+//            ids.append("," + id);
+//                    music.put("songName", song.getString("name"));//歌曲名
+//            music.put("mvId", song.get("mv"));// mv的id
+//            final int dt = song.getIntValue("dt");
+//            music.put("durationTime", dt);// 时长，单位毫秒
+//                    final JSONObject al = song.getJSONObject("al");
+//            music.put("albumName", al.getString("name"));// 专辑名称
+//                    music.put("songPicUrl", al.getString("picUrl"));// 封面链接
+//                    music.put("singer", song.getJSONArray("ar"));// 歌手
+                    url = song.getString("url");
+//                    music.put("MusicUrl", url);
+//                    System.out.println(url);
+//                    //初始化音乐搜索数据列表
+//                    initMusicData(music);
+                    musicInfoList.get(position).setMusicUrl(url);
+                    System.out.println(musicInfoList.get(position).getMusicUrl());
+                }
+
+
+                //向handle发送消息
+                Message msg = AudioPlayer.musicSetHandler.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putString("musicUrl", url);
+                bundle.putString("musicCover", musicInfoList.get(position).getPageImg());
+                bundle.putString("musicSinger", musicInfoList.get(position).getMusicSinger());
+                bundle.putString("musicName", musicInfoList.get(position).getMusicName());
+                msg.setData(bundle);
+                msg.what = 300;
+                AudioPlayer.musicSetHandler.sendMessage(msg);
+
+                Intent ap = new Intent(context, AudioPlayer.class);
+                context.startActivity(ap);
+            }
+        });
     }
 
 
@@ -192,5 +316,9 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
             return musicInfoList.size();
         }
         return 0;
+    }
+
+    public interface OnItemClickListener {
+        void onClick(View view);
     }
 }

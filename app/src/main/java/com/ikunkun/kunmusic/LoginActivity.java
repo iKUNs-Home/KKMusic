@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(LoginActivity.this,MainActivity.class) ;
             // 将用户名传到xxx
             intent.putExtra("userName",user);
+                System.out.println("user" +user);
             startActivity(intent);
             Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
                 Message msg = MineFragment.handler.obtainMessage();

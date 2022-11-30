@@ -17,11 +17,11 @@ public class MusicInfo implements Serializable {
                 '}';
     }
 
-    public Integer getMusicId() {
+    public String getMusicId() {
         return MusicId;
     }
 
-    public void setMusicId(Integer musicId) {
+    public void setMusicId(String musicId) {
         MusicId = musicId;
     }
 
@@ -76,7 +76,7 @@ public class MusicInfo implements Serializable {
      * MusicSize 大小
      */
     private BitmapDrawable bmpDraw;
-    private Integer MusicId;
+    private String MusicId;
     private String PageImg;
     private String MusicName;
     private String MusicSinger;

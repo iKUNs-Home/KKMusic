@@ -55,6 +55,7 @@ public class MusicUtils {
                     }
                 //歌曲路径
                 song.setMusicPath(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
+                System.out.println(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
                 //歌曲时长
 //                song.g = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
                 //歌曲大小

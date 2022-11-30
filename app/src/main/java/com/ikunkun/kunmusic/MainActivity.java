@@ -277,10 +277,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationView nav_view = (NavigationView) findViewById(R.id.navigation_view);
         View headerView = nav_view.getHeaderView(0);
         TextView nav_name = (TextView) headerView.findViewById(R.id.nav_name);
-        ;
+
         Intent getData = getIntent();
         //getExtras()得到intent所附带的值
         String userName = getData.getStringExtra("userName");
+        System.out.println("userName:"+userName);
         //通过key获取相应的value
         if (userName != null) {
             nav_name.setText(userName);

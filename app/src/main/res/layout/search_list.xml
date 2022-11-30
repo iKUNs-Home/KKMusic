@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/mine_ilike"
+        android:id="@+id/each_songItem"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:layout_marginTop="7dp"
@@ -12,7 +12,6 @@
         android:clickable="true"
         android:elevation="3dp"
         android:focusable="true"
-        android:focusableInTouchMode="true"
         android:orientation="horizontal">
 
         <com.ikunkun.kunmusic.tools.XCRoundImageView
