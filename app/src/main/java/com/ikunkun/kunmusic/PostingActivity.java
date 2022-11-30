@@ -32,7 +32,7 @@ public class PostingActivity  extends AppCompatActivity implements View.OnClickL
         CommunityMessageInfo CommunityMessageInfo=new CommunityMessageInfo();
         CommunityMessageInfo.setMessage(getmessage);
 //        判断是否登录账号，否则使用游客身份发帖
-        if(LoginActivity.tempuser.getUserName()!=null) {
+        if(LoginActivity.tempuser!=null) {
             CommunityMessageInfo.setUserName(LoginActivity.tempuser.getUserName());
         }
         else{

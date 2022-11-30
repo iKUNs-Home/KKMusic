@@ -4,6 +4,7 @@
     android:id="@+id/pcb"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:elevation="10dp"
     android:background="@drawable/ui_main_shape">
         <RelativeLayout
             android:id="@+id/rl_progress"

@@ -14,7 +14,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/ui_second_shape">
+        android:background="@drawable/ui_whilt"
+        android:orientation="horizontal">
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout_HomeTop"
         android:layout_width="match_parent"
@@ -28,7 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tab_layout_HomeTop">
-
     </androidx.viewpager.widget.ViewPager>
     </LinearLayout>
 </RelativeLayout>

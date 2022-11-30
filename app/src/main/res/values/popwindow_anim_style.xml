@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>     <style name="popwindow_anim_style">
+    <item name="android:windowEnterAnimation">@drawable/anim_pop</item>
+    <!-- 指定显示时的动画xml -->
+    <item name="android:windowExitAnimation">@drawable/anim_pop2</item>
+    <!-- 指定消失时的动画xml -->
+</style></resources>

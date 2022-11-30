@@ -3,10 +3,12 @@ import static com.ikunkun.kunmusic.MainActivity.*;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.ikunkun.kunmusic.comn.UserInfo;
+import com.ikunkun.kunmusic.views.CommunityFragment;
 import com.ikunkun.kunmusic.views.MineFragment;
 
 import org.litepal.LitePal;
@@ -60,7 +62,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String user = mAccount.getText().toString().trim();
             //获取密码
             String pwd = mPwd.getText().toString().trim();
-
             tempuser.setUserName(user);
             List<UserInfo> list = LitePal.where(" userName = ? and userPwd = ?", user, pwd).find(UserInfo.class);
             //登录成功
@@ -71,6 +72,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             intent.putExtra("userName",user);
             startActivity(intent);
             Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+                Message msg = MineFragment.handler.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putString("username",user);
+                msg.setData(bundle);
+                MineFragment.handler.sendMessage(msg);
+            finish();
                 //设置用户名
 //                setContentView(R.layout.nav_header);
 //                System.out.println(user);
@@ -96,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             } else {
                 //登录失败
+                tempuser=null;
                 Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();
             }
         }

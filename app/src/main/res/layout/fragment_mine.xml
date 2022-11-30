@@ -113,17 +113,23 @@
         android:layout_marginTop="15dp"
         android:elevation="3dp"
         android:background="@drawable/ui_second_shape"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal">
-
+        android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text=""
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:text="❓"
                 android:textSize="33dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="  敬请期待......"
+                    android:textSize="17dp"
+                    android:textColor="#6A6A6A" />
         </LinearLayout>
 
     </LinearLayout>

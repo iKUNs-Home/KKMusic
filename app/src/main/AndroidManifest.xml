@@ -32,7 +32,6 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleInstance"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,14 +47,15 @@
         <activity
             android:name=".BottomAudioControl"
             android:exported="true" />
-            android:exported="false" />
         <activity
             android:name=".PostingActivity"
             android:exported="false" />
         <activity
             android:name=".adapt.localAdapter"
             android:exported="false" />
-
+        <activity
+            android:name=".adapt.IlikeAdapter"
+            android:exported="false" />
 
 
     </application>

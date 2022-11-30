@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 
+import org.litepal.LitePal;
+
 import java.util.List;
 
 /**
@@ -22,7 +24,6 @@ public class localAdapter extends AppCompatActivity implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list =  (List<MusicInfo>) getIntent().getSerializableExtra("list");
-        System.out.println("test3"+list.size());
         setContentView(R.layout.activity_search);
         recyclerView=findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

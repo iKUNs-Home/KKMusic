@@ -3,6 +3,8 @@ package com.ikunkun.kunmusic.views;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 
 import com.ikunkun.kunmusic.LoginActivity;
 import com.ikunkun.kunmusic.R;
+import com.ikunkun.kunmusic.adapt.IlikeAdapter;
 import com.ikunkun.kunmusic.adapt.localAdapter;
 import com.ikunkun.kunmusic.comn.MusicInfo;
+import com.ikunkun.kunmusic.comn.UserInfo;
 import com.ikunkun.kunmusic.tools.MusicUtils;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.ExplainReasonCallbackWithBeforeParam;
@@ -27,6 +32,8 @@ import com.permissionx.guolindev.callback.RequestCallback;
 import com.permissionx.guolindev.request.ExplainScope;
 import com.permissionx.guolindev.request.ForwardScope;
 
+import org.litepal.LitePal;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -34,6 +41,25 @@ import java.util.List;
 
 
 public class MineFragment extends Fragment implements View.OnClickListener{
+    static TextView mine_name;
+    static FragmentActivity context;
+    List<UserInfo> userinfolist;
+    private static String[] mznames;
+    public static Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            Bundle bundle =msg.getData();
+            System.out.println(mine_name);
+            init(bundle.getString("username"));
+//            mine_name.setText(bundle.getString("username"));
+        }
+    };
+    public static void init(String str){
+        mine_name=context.findViewById(R.id.mine_name);
+        LinearLayout Ilike = context.findViewById(R.id.mine_ilike);
+        mine_name.setText(str);
+    }
+
     @Nullable
 //    本地音乐列表
     public List<MusicInfo> list=new ArrayList<MusicInfo>();
@@ -41,12 +67,14 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
+
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        context =getActivity();
         LinearLayout mine_music = getActivity().findViewById(R.id.mine_music);
         TextView mine_musicnum=getActivity().findViewById(R.id.mine_musicnum);
 //        申请权限，并扫描手机音乐
@@ -57,6 +85,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
         mine_music.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent_to_local = new Intent(getActivity(), localAdapter.class);
                 intent_to_local.putExtra("list", (Serializable) list);
                 startActivity(intent_to_local);
@@ -64,12 +93,19 @@ public class MineFragment extends Fragment implements View.OnClickListener{
         });
 //        账号已登录
         if(LoginActivity.tempuser.getUserName()!=null) {
-            TextView mine_name=getActivity().findViewById(R.id.mine_name);
-            mine_name.setText(LoginActivity.tempuser.getUserName());
+//            List<UserInfo> UserInfoList = LitePal.findAll(UserInfo.class);
+            init(LoginActivity.tempuser.getUserName());
+            TextView mine_ilikenum=getActivity().findViewById(R.id.mine_ilikenum);
+            userinfolist = LitePal.where(" userName = ?", LoginActivity.tempuser.getUserName()).find(UserInfo.class);
+            mznames=userinfolist.get(0).getIlikename().split("---");
+            mine_ilikenum.setText("  🏀 "+(mznames.length-1)+"首");
             LinearLayout Ilike = getActivity().findViewById(R.id.mine_ilike);
             Ilike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent intent_to_Ilike = new Intent(getActivity(), IlikeAdapter.class);
+//                    intent_to_Ilike.putExtra("userlist", (Serializable) UserInfoList);
+                    startActivity(intent_to_Ilike);
                     Toast.makeText(getActivity(), "点击事件", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -86,6 +122,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
                 public void onClick(View v) {
                     Intent intent=new Intent(getActivity(),LoginActivity.class);
                     startActivity(intent);
+
                 }
             });
             LinearLayout Ilike = getActivity().findViewById(R.id.mine_ilike);

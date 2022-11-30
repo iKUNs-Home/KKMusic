@@ -1,6 +1,8 @@
 package com.ikunkun.kunmusic.comn;
 import org.litepal.crud.LitePalSupport;
 
+import java.util.LinkedList;
+
 /**
  * 用户信息
  */
@@ -9,16 +11,34 @@ public class UserInfo extends LitePalSupport {
     private String userPwd;                   //用户密码
     private String userId;                       //用户ID号
 
-    public String[] getiLikeList() {
-        return iLikeList;
+
+    public String getIlikename() {
+        return Ilikename;
     }
 
-    public void setiLikeList(String[] iLikeList) {
-        this.iLikeList = iLikeList;
+    public void setIlikename(String ilikename) {
+        Ilikename = ilikename;
     }
 
-    private String[] iLikeList;                 //我喜欢的音乐
+    public String getIlikesinger() {
+        return Ilikesinger;
+    }
 
+    public void setIlikesinger(String ilikesinger) {
+        Ilikesinger = ilikesinger;
+    }
+
+    public String getIlikeurl() {
+        return Ilikeurl;
+    }
+
+    public void setIlikeurl(String ilikeurl) {
+        Ilikeurl = ilikeurl;
+    }
+
+    private String Ilikename=new String();
+    private String Ilikesinger=new String();
+    private String Ilikeurl=new String();
 
     public String getUserName() {
         return userName;
