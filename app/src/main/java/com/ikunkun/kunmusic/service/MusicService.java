@@ -2,6 +2,7 @@ package com.ikunkun.kunmusic.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.os.Message;
 import androidx.annotation.Nullable;
 
 import com.ikunkun.kunmusic.AudioPlayer;
+import com.ikunkun.kunmusic.MainActivity;
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.views.MusicRoundProgressView;
 
@@ -86,15 +88,24 @@ public class MusicService extends Service {
                     if (mPlayer == null) return;
                     int duration = mPlayer.getDuration();
                     int currentPosition = mPlayer.getCurrentPosition();
-                    Message msg = AudioPlayer.handler.obtainMessage();
-                    Message msg2 = MusicRoundProgressView.handler.obtainMessage();
                     Bundle bundle = new Bundle();
                     bundle.putInt("duration", duration);
                     bundle.putInt("currentPosition", currentPosition);
-                    msg.setData(bundle);
+
+                    boolean apIsActive;
+                    SharedPreferences sp = getSharedPreferences("apStatus", MODE_PRIVATE);
+                    apIsActive = sp.getBoolean("apActive", false);
+                    System.out.println("apIsActive2 " + apIsActive);
+
+                    Message msg2 = MusicRoundProgressView.handler.obtainMessage();
                     msg2.setData(bundle);
                     MusicRoundProgressView.handler.sendMessage(msg2);
-                    AudioPlayer.handler.sendMessage(msg);
+
+                    if (apIsActive) {
+                        Message msg = AudioPlayer.handler.obtainMessage();
+                        msg.setData(bundle);
+                        AudioPlayer.handler.sendMessage(msg);
+                    }
 //                    Looper.loop();
                 }
             };
@@ -122,8 +133,19 @@ public class MusicService extends Service {
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     System.out.println("Voice文件准备完毕");
                     System.out.println("Voice文件时长 " + mPlayer.getDuration() / 1000 + " ");
-                    Message msg = AudioPlayer.handler3.obtainMessage();
-                    AudioPlayer.handler3.sendMessage(msg);
+
+                    boolean apIsActive;
+                    SharedPreferences sp = getSharedPreferences("apStatus", MODE_PRIVATE);
+                    apIsActive = sp.getBoolean("apActive", false);
+                    System.out.println("apIsActive2 " + apIsActive);
+
+                    if (apIsActive) {
+                        Message msg = AudioPlayer.handler3.obtainMessage();
+                        AudioPlayer.handler3.sendMessage(msg);
+                    } else {
+                        Message msg = MainActivity.handler2.obtainMessage();
+                        MainActivity.handler2.sendMessage(msg);
+                    }
                 }
             });
         }

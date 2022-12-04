@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/activity_audio_player.xml" value="0.23802083333333332" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/activity_search.xml" value="0.25364583333333335" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_test.xml" value="0.1109375" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/ilike_list.xml" value="0.23802083333333332" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/play_control_bottom.xml" value="0.4" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/search_list.xml" value="0.19479166666666667" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KunMusic/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KunMusic/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
@@ -64,5 +69,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.23802083333333332" />
+      </ProjectState>
+    </option>
   </component>
 </project>

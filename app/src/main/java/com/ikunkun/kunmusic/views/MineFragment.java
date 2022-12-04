@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 
 import com.ikunkun.kunmusic.LoginActivity;
@@ -86,9 +89,18 @@ public class MineFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View v) {
 
-                Intent intent_to_local = new Intent(getActivity(), localAdapter.class);
-                intent_to_local.putExtra("list", (Serializable) list);
-                startActivity(intent_to_local);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                LocalMusicFragment localMusicFragment = new LocalMusicFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("list", (Serializable) list);
+                localMusicFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.mainFragment,localMusicFragment,"localFragment");
+                fragmentTransaction.commit();
+
+//                Intent intent_to_local = new Intent(getActivity(), localAdapter.class);
+//                intent_to_local.putExtra("list", (Serializable) list);
+//                startActivity(intent_to_local);
             }
         });
 //        账号已登录

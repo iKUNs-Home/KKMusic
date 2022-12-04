@@ -12,6 +12,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -142,6 +143,13 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setStatusBarTranslucent();
         setContentView(R.layout.activity_audio_player);
+
+        SharedPreferences sp = getSharedPreferences("apStatus",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("apActive",true);
+        editor.apply();
+        System.out.println("truetruetrue");
+
         mContext = getApplicationContext();
 
         apBlurBK = findViewById(R.id.apBlurBackground);
@@ -270,6 +278,12 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
                 strSecond = second + "";
             }
             apProgress.setText(strMinute + ":" + strSecond);
+
+            if (musicControl.isPlaying()){
+                apPlay.setBackgroundResource(R.drawable.play);
+            }else {
+                apPlay.setBackgroundResource(R.drawable.pause);
+            }
         }
     };
 
@@ -345,6 +359,15 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         System.out.println("apDestroy");
+
+        SharedPreferences sp = getSharedPreferences("apStatus",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("apActive",false);
+        editor.apply();
+//
+//        editor.clear();
+//        editor.apply();
+
         super.onDestroy();
 //        unbind(isUnbind);
     }

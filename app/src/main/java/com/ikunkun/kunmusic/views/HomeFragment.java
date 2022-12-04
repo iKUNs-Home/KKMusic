@@ -26,7 +26,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home,container,false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         return view;
     }
 
@@ -38,8 +38,10 @@ public class HomeFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tab_layout_HomeTop);
 
         //类findViewById(),自动实例化，动态添加布局
-        View view1 = LayoutInflater.from(view.getContext()).inflate(R.layout.fragment_home_app,null);
+        View view1 = LayoutInflater.from(view.getContext()).inflate(R.layout.fragment_home_app, null);
         View view2 = LayoutInflater.from(view.getContext()).inflate(R.layout.fragment_home_local,null);
+//        LocalMusicFragment fragment = new LocalMusicFragment();
+//        View view2 = new View(fragment.getActivity());
 
         //添加views列表
         views = new ArrayList<>();
@@ -52,7 +54,7 @@ public class HomeFragment extends Fragment {
         titles.add("本地音乐");
 
         //初始化viewPage适配器
-        ViewPageAdapt viewPageAdapt = new ViewPageAdapt(views,titles);
+        ViewPageAdapt viewPageAdapt = new ViewPageAdapt(views, titles);
 
         //为顶部导航栏设置标题
         for (String title : titles) {

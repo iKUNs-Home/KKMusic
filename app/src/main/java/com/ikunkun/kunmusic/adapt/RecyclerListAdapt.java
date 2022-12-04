@@ -1,8 +1,15 @@
 package com.ikunkun.kunmusic.adapt;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,6 +38,7 @@ import com.ikunkun.kunmusic.LoginActivity;
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 import com.ikunkun.kunmusic.comn.UserInfo;
+import com.ikunkun.kunmusic.service.MusicService;
 
 import org.litepal.LitePal;
 
@@ -216,19 +224,33 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
     }
 
     public void MusicLocal(String localPath,int position){
-        Message msg = AudioPlayer.musicSetHandler.obtainMessage();
+        boolean apIsActive;
+        SharedPreferences sp = context.getSharedPreferences("apStatus", MODE_PRIVATE);
+        apIsActive = sp.getBoolean("apActive", false);
+        System.out.println("apIsActive-recyclerList " + apIsActive);
+        System.out.println(localPath);
         Bundle bundle = new Bundle();
         bundle.putString("musicPath", localPath);
-        msg.setData(bundle);
-        msg.what = 310;
-        AudioPlayer.musicSetHandler.sendMessage(msg);
 
-        Intent ap = new Intent(context, AudioPlayer.class);
-        context.startActivity(ap);
+        if (apIsActive) {
+            Message msg = AudioPlayer.musicSetHandler.obtainMessage();
+            msg.setData(bundle);
+            msg.what = 310;
+            AudioPlayer.musicSetHandler.sendMessage(msg);
+
+            Intent ap = new Intent(context, AudioPlayer.class);
+            context.startActivity(ap);
+        }else {
+            Message msg = MainActivity.handler.obtainMessage();
+            msg.setData(bundle);
+            msg.what = 311;
+            MainActivity.handler.sendMessage(msg);
+        }
     }
 
     public void MusicSearchByID(String id, int position) {
-        String serverUrl = "http://172.20.10.2:3000/";
+//        String serverUrl = "http://172.17.115.69:3000/";
+        String serverUrl = MainActivity.getApiMusicIP();
 
         //fullUrl最终访问的url
         String fullUrl = serverUrl + "song/url?id=" + id;
@@ -284,24 +306,41 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
                     System.out.println(musicInfoList.get(position).getMusicUrl());
                 }
 
+//                Intent ap = new Intent(context, AudioPlayer.class);
+//                context.startActivity(ap);
 
                 //向handle发送消息
-                Message msg = AudioPlayer.musicSetHandler.obtainMessage();
+                boolean apIsActive;
+                SharedPreferences sp = context.getSharedPreferences("apStatus", MODE_PRIVATE);
+                apIsActive = sp.getBoolean("apActive", false);
+                System.out.println("apIsActive-searchList " + apIsActive);
+
                 Bundle bundle = new Bundle();
                 bundle.putString("musicUrl", url);
                 bundle.putString("musicCover", musicInfoList.get(position).getPageImg());
                 bundle.putString("musicSinger", musicInfoList.get(position).getMusicSinger());
                 bundle.putString("musicName", musicInfoList.get(position).getMusicName());
-                msg.setData(bundle);
-                msg.what = 300;
-                AudioPlayer.musicSetHandler.sendMessage(msg);
 
-                Intent ap = new Intent(context, AudioPlayer.class);
-                context.startActivity(ap);
+                if (apIsActive) {
+                    Message msg = AudioPlayer.musicSetHandler.obtainMessage();
+                    msg.setData(bundle);
+                    msg.what = 320;
+                    AudioPlayer.musicSetHandler.sendMessage(msg);
+
+                    Intent ap = new Intent(context, AudioPlayer.class);
+                    context.startActivity(ap);
+                }else {
+                    Message msg = MainActivity.handler.obtainMessage();
+                    msg.setData(bundle);
+                    msg.what = 321;
+                    MainActivity.handler.sendMessage(msg);
+                }
+
+//                Intent ap = new Intent(context, AudioPlayer.class);
+//                context.startActivity(ap);
             }
         });
     }
-
 
     @Override
     public int getItemViewType(int position) {
