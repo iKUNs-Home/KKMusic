@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +23,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.ikunkun.kunmusic.LoginActivity;
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.adapt.IlikeAdapter;
-import com.ikunkun.kunmusic.adapt.localAdapter;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 import com.ikunkun.kunmusic.comn.UserInfo;
 import com.ikunkun.kunmusic.tools.MusicUtils;

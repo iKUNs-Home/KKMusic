@@ -145,7 +145,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_audio_player);
         mContext = getApplicationContext();
 
-        SharedPreferences sp = getSharedPreferences("apStatus",MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("apStatus", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("apActive",true);
         editor.apply();
@@ -153,11 +153,11 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 
         mContext = getApplicationContext();
 
-        apBlurBK = findViewById(R.id.apBlurBackground);
-        Resources res = mContext.getResources();
-        Bitmap background = BitmapFactory.decodeResource(res, R.drawable.cover1);
-        Bitmap BlurBackground = ImageFilter.blurBitmap(this, background, 25f);
-        apBlurBK.setImageBitmap(BlurBackground);
+//        apBlurBK = findViewById(R.id.apBlurBackground);
+//        Resources res = mContext.getResources();
+//        Bitmap background = BitmapFactory.decodeResource(res, R.drawable.cover1);
+//        Bitmap BlurBackground = ImageFilter.blurBitmap(this, background, 25f);
+//        apBlurBK.setImageBitmap(BlurBackground);
         init();
     }
 
@@ -215,6 +215,13 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 //        startService(mIntent);
         if (!isServiceRunning(getApplicationContext(), "MusicService")) {
             bindService(mIntent, mcn, BIND_AUTO_CREATE);
+            apBlurBK = findViewById(R.id.apBlurBackground);
+            Resources res = mContext.getResources();
+            Bitmap background = BitmapFactory.decodeResource(res, R.drawable.cover1);
+            Bitmap BlurBackground = ImageFilter.blurBitmap(this, background, 25f);
+            apBlurBK.setImageBitmap(BlurBackground);
+//            System.out.println(6666666);
+//            animatorControl.startAnimator();
         }
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -280,9 +287,12 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
             }
             apProgress.setText(strMinute + ":" + strSecond);
 
-            if (musicControl.isPlaying()){
+            if (musicControl.isPlaying()) {
                 apPlay.setBackgroundResource(R.drawable.play);
-            }else {
+                if (!animatorControl.isStartAnimator()) {
+                    animatorControl.startAnimator();
+                }
+            } else {
                 apPlay.setBackgroundResource(R.drawable.pause);
             }
         }
@@ -297,7 +307,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    public static void apPlayMZ(){
+    public static void apPlayMZ() {
         musicControl.play();
         Message msg = MainActivity.handler.obtainMessage();
         if (musicControl.isPlaying()) {

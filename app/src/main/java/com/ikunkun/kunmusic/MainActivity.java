@@ -44,6 +44,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.ikunkun.kunmusic.adapt.FragmentAdapter;
 import com.ikunkun.kunmusic.adapt.RecyclerListAdapt;
+import com.ikunkun.kunmusic.comn.MusicInfo;
+import com.ikunkun.kunmusic.comn.UserInfo;
 import com.ikunkun.kunmusic.service.MusicService;
 import com.ikunkun.kunmusic.views.AboutFragment;
 import com.ikunkun.kunmusic.views.CommunityFragment;
@@ -55,6 +57,8 @@ import com.jaeger.library.StatusBarUtil;
 import com.xiaoyouProject.searchbox.SearchFragment;
 import com.xiaoyouProject.searchbox.custom.IOnSearchClickListener;
 import com.xiaoyouProject.searchbox.entity.CustomLink;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     private static apCoverFragment.controlAnimator animatorControl;
     private static Context mContext;
     private static final String apiMusicIP = "http://172.17.36.223:3000/";
+    private static List<MusicInfo> curUserMusicList = new ArrayList<>();
 
 
     public void setStatusBarTranslucent() {
@@ -238,6 +243,16 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.apply();
+
+//        LitePal.initialize(this);
+//        String user = "1";
+//        List<UserInfo> list = LitePal.where("userName = ?", user).find(UserInfo.class);
+//        list.get(0).getUserMusicListName().split("----");
+//        list.get(0).getUserMusicListSinger().split("----");
+//        list.get(0).getUserMusicListUrl().split("----");
+//        list.get(0).getUserMusicListCoverUrl().split("----");
+//        curUserMusicList.addAll();
+
 
         //获取布局控件等的id
         bnView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);

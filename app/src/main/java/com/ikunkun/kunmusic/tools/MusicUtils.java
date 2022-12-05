@@ -61,10 +61,10 @@ public class MusicUtils {
                 Bitmap musicimage=loadingCover(song.getMusicPath());
                 if(musicimage==null){
                     System.out.println("musicimageisnull");
+                }else {
+                    BitmapDrawable bmpDraw = new BitmapDrawable(musicimage);
+                    song.setBmp_pic(getBytes(musicimage));
                 }
-                BitmapDrawable bmpDraw = new BitmapDrawable(musicimage);
-
-                song.setBmp_pic(getBytes(musicimage));
                 //歌曲时长
 //                song.g = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
                 //歌曲大小
@@ -91,10 +91,13 @@ public class MusicUtils {
      * mediaUri MP3文件路径
      */
     private static Bitmap loadingCover(String mediaUri) {
-        MediaMetadataRetriever mediaMetadataRetriever=new MediaMetadataRetriever();
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(mediaUri);
         byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
-        Bitmap bitmap= BitmapFactory.decodeByteArray(picture,0,picture.length);
+        Bitmap bitmap = null;
+        if (picture != null) {
+            bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+        }
         return bitmap;
     }
 

@@ -36,6 +36,7 @@ public class LocalMusicFragment extends Fragment {
 
         Bundle bundle = getArguments();
         list = (List<MusicInfo>) bundle.getSerializable("list");
+        System.out.println(11111111);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
