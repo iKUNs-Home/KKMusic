@@ -73,6 +73,7 @@ public class HomeFragment extends Fragment {
         ViewPageAdapt viewPageAdapt = new ViewPageAdapt(views, titles);
 //        Home_LocalAdapter home_localAdapter=new Home_LocalAdapter(view2.getContext());
         viewPager.setAdapter(viewPageAdapt);
+
         //为顶部导航栏设置标题
         for (String title : titles) {
             tabLayout.addTab(tabLayout.newTab().setText(title));
