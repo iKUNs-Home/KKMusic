@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="#FFCDCD"
+        android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:navigationIcon="@drawable/menu"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -48,20 +49,34 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/view_pager"
+            <FrameLayout
+                android:id="@+id/mainFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/bottom_nav_view" />
+                android:layout_above="@+id/bottom_nav_view">
 
-            <include
-                layout="@layout/play_control_bottom"
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/pcbControl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/bottom_nav_view"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_above="@+id/bottom_nav_view">
+
+                <include
+                    layout="@layout/play_control_bottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp" />
+            </RelativeLayout>
+
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_nav_view"
@@ -69,7 +84,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="#fcfcfc"
-                android:windowSoftInputMode="adjustPan"
                 app:itemIconTint="@drawable/selected_menu_color"
                 app:itemTextColor="@drawable/selected_menu_color"
                 app:menu="@menu/tab_menu" />

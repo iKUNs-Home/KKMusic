@@ -1,13 +1,15 @@
 package com.ikunkun.kunmusic.comn;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Binder;
 
 import java.io.Serializable;
 
 public class MusicInfo implements Serializable {
 
     @Override
-    public String toString() {
+    public String toString () {
         return "MusicInfo{" +
                 "MusicId=" + MusicId +
                 ", PageImg='" + PageImg + '\'' +
@@ -17,11 +19,11 @@ public class MusicInfo implements Serializable {
                 '}';
     }
 
-    public Integer getMusicId() {
+    public String getMusicId() {
         return MusicId;
     }
 
-    public void setMusicId(Integer musicId) {
+    public void setMusicId(String musicId) {
         MusicId = musicId;
     }
 
@@ -57,12 +59,15 @@ public class MusicInfo implements Serializable {
         MusicUrl = musicUrl;
     }
 
-    public BitmapDrawable getBmpDraw() {
-        return bmpDraw;
+
+
+
+    public byte[] getBmp_pic() {
+        return bmp_pic;
     }
 
-    public void setBmpDraw(BitmapDrawable bmpDraw) {
-        this.bmpDraw = bmpDraw;
+    public void setBmp_pic(byte[] bmp_pic) {
+        this.bmp_pic = bmp_pic;
     }
 
     /**
@@ -71,12 +76,13 @@ public class MusicInfo implements Serializable {
      * MusicName 音乐名
      * MusicSinger 歌手
      * MusicUrl 下载链接
-     * bmpDraw 图片bitmap
+     * bmp_pic 图片bitmap的btye流形式
      * MusicPath 路径
      * MusicSize 大小
      */
-    private BitmapDrawable bmpDraw;
-    private Integer MusicId;
+//    bitmap无法可序化，需转化为byte[]形式
+    private byte[] bmp_pic;
+    private String MusicId;
     private String PageImg;
     private String MusicName;
     private String MusicSinger;
@@ -99,10 +105,4 @@ public class MusicInfo implements Serializable {
     public void setMusicPath(String musicPath) {
         MusicPath = musicPath;
     }
-
-
-    public MusicInfo() {
-    }
-
-
 }

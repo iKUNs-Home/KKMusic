@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 
@@ -18,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView;
@@ -45,6 +49,7 @@ import com.ikunkun.kunmusic.views.AboutFragment;
 import com.ikunkun.kunmusic.views.CommunityFragment;
 import com.ikunkun.kunmusic.views.HomeFragment;
 import com.ikunkun.kunmusic.views.MineFragment;
+import com.ikunkun.kunmusic.views.TestFragment;
 import com.ikunkun.kunmusic.views.apCoverFragment;
 import com.jaeger.library.StatusBarUtil;
 import com.xiaoyouProject.searchbox.SearchFragment;
@@ -63,10 +68,14 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;      //左边滑动抽屉
 
     private static ImageButton pcbPlay;
-    private Intent mIntent;
-    private ServiceConnection mcn;
-    private MusicService.MusicControl musicControl;
-    private apCoverFragment.controlAnimator animatorControl;
+    private static Intent mIntent;
+    private static ServiceConnection mcn;
+    private static MusicService.MusicControl musicControl;
+    private static apCoverFragment.controlAnimator animatorControl;
+    private static Context mContext;
+    private static final String apiMusicIP = "http://172.17.36.223:3000/";
+
+
     public void setStatusBarTranslucent() {
         StatusBarUtil.setTranslucentForImageViewInFragment(this,
                 0, null);
@@ -86,7 +95,20 @@ public class MainActivity extends AppCompatActivity {
                     pcbPlay.setBackgroundResource(R.drawable.pause);
                     System.out.println("108");
                     break;
+                case 311:
+                    Bundle bundle2 = msg.getData();
+                    String musicPath = bundle2.getString("musicPath");
+                    System.out.println("Handler " + musicPath);
+                    musicControl.ReSetMusic(musicPath);
+                    break;
             }
+        }
+    };
+
+    public static Handler handler2 = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            pcbPlayMZ();
         }
     };
 
@@ -112,22 +134,7 @@ public class MainActivity extends AppCompatActivity {
         pcbPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                musicControl.play();
-                Message msg = AudioPlayer.handler2.obtainMessage();
-                if (musicControl.isPlaying()) {
-                    pcbPlay.setBackgroundResource(R.drawable.play);
-                    msg.what = 207;
-                    if (animatorControl.isPausedAnimator()) {
-                        animatorControl.resumeAnimator();
-                    } else {
-                        animatorControl.startAnimator();
-                    }
-                } else {
-                    msg.what = 208;
-                    pcbPlay.setBackgroundResource(R.drawable.pause);
-                    animatorControl.pauseAnimator();
-                }
-                AudioPlayer.handler2.sendMessage(msg);
+                pcbPlayMZ();
             }
         });
 
@@ -139,6 +146,47 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(in);
             }
         });
+    }
+
+    public static void pcbPlayMZ() {
+        boolean apIsActive;
+        SharedPreferences sp = mContext.getSharedPreferences("apStatus", MODE_PRIVATE);
+        apIsActive = sp.getBoolean("apActive", false);
+        System.out.println("apIsActive " + apIsActive);
+
+        musicControl.play();
+        if (!apIsActive) {
+//                Message msg = AudioPlayer.handler2.obtainMessage();
+            if (musicControl.isPlaying()) {
+                pcbPlay.setBackgroundResource(R.drawable.play);
+//                    msg.what = 207;
+//                    if (animatorControl.isPausedAnimator()) {
+//                        animatorControl.resumeAnimator();
+//                    } else {
+//                        animatorControl.startAnimator();
+//                    }
+            } else {
+//                    msg.what = 208;
+                pcbPlay.setBackgroundResource(R.drawable.pause);
+//                    animatorControl.pauseAnimator();
+            }
+        } else {
+            Message msg = AudioPlayer.handler2.obtainMessage();
+            if (musicControl.isPlaying()) {
+                pcbPlay.setBackgroundResource(R.drawable.play);
+                msg.what = 207;
+                if (animatorControl.isPausedAnimator()) {
+                    animatorControl.resumeAnimator();
+                } else {
+                    animatorControl.startAnimator();
+                }
+            } else {
+                msg.what = 208;
+                pcbPlay.setBackgroundResource(R.drawable.pause);
+                animatorControl.pauseAnimator();
+            }
+            AudioPlayer.handler2.sendMessage(msg);
+        }
     }
 
     public boolean isServiceRunning(Context mContext, String className) {
@@ -181,7 +229,15 @@ public class MainActivity extends AppCompatActivity {
         //设置主布局
         setContentView(R.layout.activity_main);
 
+        mContext = getApplicationContext();
+
         pcbInit();
+        RelativeLayout relativeLayout = findViewById(R.id.pcbControl);
+
+        SharedPreferences sp = getSharedPreferences("apStatus", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
 
         //获取布局控件等的id
         bnView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
@@ -205,9 +261,20 @@ public class MainActivity extends AppCompatActivity {
             public void onSearchClick(String keyword) {
                 System.out.println("keyword = " + keyword);
                 //开启搜索列表activity，同时向其传送搜索关键词
-                Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
-                searchIntent.putExtra("keyword", keyword);
-                startActivity(searchIntent);
+//                Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+//                searchIntent.putExtra("keyword", keyword);
+//                startActivity(searchIntent);
+                bnView.setVisibility(View.GONE);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                com.ikunkun.kunmusic.views.SearchFragment searchFragment1 = new com.ikunkun.kunmusic.views.SearchFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("keyword",keyword);
+                searchFragment1.setArguments(bundle);
+                fragmentTransaction.replace(R.id.mainFragment,searchFragment1,"searchFragment");
+                fragmentTransaction.commit();
             }
 
             /**
@@ -277,10 +344,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationView nav_view = (NavigationView) findViewById(R.id.navigation_view);
         View headerView = nav_view.getHeaderView(0);
         TextView nav_name = (TextView) headerView.findViewById(R.id.nav_name);
-        ;
+
         Intent getData = getIntent();
         //getExtras()得到intent所附带的值
         String userName = getData.getStringExtra("userName");
+        System.out.println("userName:" + userName);
         //通过key获取相应的value
         if (userName != null) {
             nav_name.setText(userName);
@@ -303,9 +371,26 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.tab_community:
                         viewPager.setCurrentItem(2);
+//                        FragmentManager fragmentManager = getSupportFragmentManager();
+//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                        TestFragment testFragment = new TestFragment();
+//                        fragmentTransaction.replace(R.id.mainFragment, testFragment);
+//                        fragmentTransaction.remove(testFragment);
+//                        fragmentTransaction.commit();
                         break;
                     case R.id.tab_about:
                         viewPager.setCurrentItem(3);
+                        bnView.setVisibility(View.GONE);
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        com.ikunkun.kunmusic.views.SearchFragment searchFragment1 = new com.ikunkun.kunmusic.views.SearchFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("keyword","666");
+                        searchFragment1.setArguments(bundle);
+                        fragmentTransaction.add(R.id.mainFragment,searchFragment1);
+                        fragmentTransaction.commit();
                         break;
                 }
 
@@ -336,4 +421,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static String getApiMusicIP() {
+        return apiMusicIP;
+    }
 }

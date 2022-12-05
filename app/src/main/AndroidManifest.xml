@@ -56,6 +56,9 @@
         <activity
             android:name=".adapt.IlikeAdapter"
             android:exported="false" />
+        <activity
+            android:name=".adapt.Home_LocalAdapter"
+            android:exported="false" />
 
 
     </application>

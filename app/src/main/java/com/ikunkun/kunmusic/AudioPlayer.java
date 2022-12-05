@@ -1,6 +1,7 @@
 package com.ikunkun.kunmusic;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -11,6 +12,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,7 +27,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ikunkun.kunmusic.adapt.FragmentAdapter;
 import com.ikunkun.kunmusic.service.MusicService;
 import com.ikunkun.kunmusic.tools.ImageFilter;
@@ -47,24 +53,70 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
     private static SeekBar mSeekBar;
     private static TextView apProgress, apTotal;
     private ObjectAnimator animator;
-    private MusicService.MusicControl musicControl;
-    private apCoverFragment.controlAnimator animatorControl;
+    private static MusicService.MusicControl musicControl;
+    private static apCoverFragment.controlAnimator animatorControl;
     //        MusicServiceConn conn;
     Intent mIntent;
     private boolean isUnbind = false;
     private ServiceConnection mcn;
+    private static Context mContext;
 
     private static ViewPager apViewPager;
+
+    static apCoverFragment.coverControl coverControl;
+
     public void setStatusBarTranslucent() {
         StatusBarUtil.setTranslucentForImageViewInFragment(this,
                 0, null);
         StatusBarUtil.setLightMode(this);
     }
 
+    public static Handler musicSetHandler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case 300:
+                    Bundle bundle = msg.getData();
+                    String musicUrl = bundle.getString("musicUrl");
+                    String musicCoverUrl = bundle.getString("musicCover");
+                    System.out.println("Handler " + musicUrl);
+                    System.out.println("Handler " + musicCoverUrl);
+
+                    musicControl.ReSetMusic(musicUrl);
+                    System.out.println("2222");
+                    Glide.with(mContext).asBitmap().load(musicCoverUrl).into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            Bitmap BlurBackground = ImageFilter.blurBitmap(mContext, resource, 25f);
+                            apBlurBK.setImageBitmap(BlurBackground);
+                            coverControl.setApCover(resource);
+                        }
+                    });
+//                    apPlayMZ();
+                    break;
+                case 301:
+                    Toast.makeText(mContext, "很抱歉。您没有权限播放此歌曲", Toast.LENGTH_SHORT).show();
+                    break;
+                case 310:
+                    Bundle bundle2 = msg.getData();
+                    String musicPath = bundle2.getString("musicPath");
+                    System.out.println("Handler " + musicPath);
+                    musicControl.ReSetMusic(musicPath);
+            }
+        }
+    };
+
+    public static Handler handler3 = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            apPlayMZ();
+        }
+    };
+
     public static Handler handler2 = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case 207:
                     apPlay.setBackgroundResource(R.drawable.play);
                     System.out.println("207");
@@ -92,8 +144,16 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         setStatusBarTranslucent();
         setContentView(R.layout.activity_audio_player);
 
+        SharedPreferences sp = getSharedPreferences("apStatus",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("apActive",true);
+        editor.apply();
+        System.out.println("truetruetrue");
+
+        mContext = getApplicationContext();
+
         apBlurBK = findViewById(R.id.apBlurBackground);
-        Resources res = AudioPlayer.this.getResources();
+        Resources res = mContext.getResources();
         Bitmap background = BitmapFactory.decodeResource(res, R.drawable.cover1);
         Bitmap BlurBackground = ImageFilter.blurBitmap(this, background, 25f);
         apBlurBK.setImageBitmap(BlurBackground);
@@ -133,6 +193,8 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         apViewPager.setAdapter(fragmentAdapter);
         animatorControl = new apCoverFragment.controlAnimator();
 
+        coverControl = new apCoverFragment.coverControl();
+
         apBack.setOnClickListener(this);
         apNext.setOnClickListener(this);
         apPrevious.setOnClickListener(this);
@@ -157,7 +219,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (i == mSeekBar.getMax()) {
-                    animator.pause();
+                    animatorControl.pauseAnimator();
                 }
             }
 
@@ -216,6 +278,12 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
                 strSecond = second + "";
             }
             apProgress.setText(strMinute + ":" + strSecond);
+
+            if (musicControl.isPlaying()){
+                apPlay.setBackgroundResource(R.drawable.play);
+            }else {
+                apPlay.setBackgroundResource(R.drawable.pause);
+            }
         }
     };
 
@@ -228,6 +296,24 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         }
     }
 
+    public static void apPlayMZ(){
+        musicControl.play();
+        Message msg = MainActivity.handler.obtainMessage();
+        if (musicControl.isPlaying()) {
+            apPlay.setBackgroundResource(R.drawable.play);
+            msg.what = 107;
+            if (animatorControl.isPausedAnimator()) {
+                animatorControl.resumeAnimator();
+            } else {
+                animatorControl.startAnimator();
+            }
+        } else {
+            apPlay.setBackgroundResource(R.drawable.pause);
+            msg.what = 108;
+            animatorControl.pauseAnimator();
+        }
+        MainActivity.handler.sendMessage(msg);
+    }
 
     @Override
     public void onClick(View view) {
@@ -238,22 +324,23 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.ib_pause:
 //                System.out.println("666" + musicControl.curPosition());
-                musicControl.play();
-                Message msg = MainActivity.handler.obtainMessage();
-                if (musicControl.isPlaying()) {
-                    apPlay.setBackgroundResource(R.drawable.play);
-                    msg.what = 107;
-                    if (animatorControl.isPausedAnimator()) {
-                        animatorControl.resumeAnimator();
-                    } else {
-                        animatorControl.startAnimator();
-                    }
-                } else {
-                    apPlay.setBackgroundResource(R.drawable.pause);
-                    msg.what = 108;
-                    animatorControl.pauseAnimator();
-                }
-                MainActivity.handler.sendMessage(msg);
+//                musicControl.play();
+//                Message msg = MainActivity.handler.obtainMessage();
+//                if (musicControl.isPlaying()) {
+//                    apPlay.setBackgroundResource(R.drawable.play);
+//                    msg.what = 107;
+//                    if (animatorControl.isPausedAnimator()) {
+//                        animatorControl.resumeAnimator();
+//                    } else {
+//                        animatorControl.startAnimator();
+//                    }
+//                } else {
+//                    apPlay.setBackgroundResource(R.drawable.pause);
+//                    msg.what = 108;
+//                    animatorControl.pauseAnimator();
+//                }
+//                MainActivity.handler.sendMessage(msg);
+                apPlayMZ();
                 break;
             case R.id.ib_next:
 //                musicControl.continuePlay(nowProgress);
@@ -272,6 +359,15 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         System.out.println("apDestroy");
+
+        SharedPreferences sp = getSharedPreferences("apStatus",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("apActive",false);
+        editor.apply();
+//
+//        editor.clear();
+//        editor.apply();
+
         super.onDestroy();
 //        unbind(isUnbind);
     }

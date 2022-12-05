@@ -10,7 +10,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewPageAdapt extends PagerAdapter {
+public class ViewPageAdapt extends PagerAdapter
+{
     private List<View> mViews;      //存储视图
     private List<String> mTitles;   //存储标题
 

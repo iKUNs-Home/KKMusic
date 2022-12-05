@@ -1,18 +1,28 @@
-package com.ikunkun.kunmusic;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.ikunkun.kunmusic.views;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
+import com.ikunkun.kunmusic.MainActivity;
+import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.adapt.RecyclerListAdapt;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 
@@ -26,10 +36,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * 搜索列表 --- 已弃用
- */
-public class SearchActivity extends AppCompatActivity {
+public class SearchFragment extends Fragment {
 
     List<MusicInfo> musicInfoList = new ArrayList<>();  //音乐列表
 
@@ -50,30 +57,52 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-
-        //接收搜索关键词keyword
-        Intent dataIntent = getIntent();
-        String keyword = dataIntent.getStringExtra("keyword");
-
-        //调用API接口查询搜索音乐
-        musicAPISearch(keyword);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_search, container, false);
 
     }
 
-    /**
-     * 初始化搜索列表
-     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //监听返回键
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    Fragment fragment = fragmentManager.findFragmentByTag("searchFragment");
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        //接收搜索关键词keyword
+        Bundle bundle = getArguments();
+//        Intent dataIntent = getIntent();
+        String keyword = bundle.getString("keyword");
+        System.out.println("keyword " + keyword);
+
+        //调用API接口查询搜索音乐
+        musicAPISearch(keyword);
+    }
+
     public void initUI() {
         System.out.println("-----------------------------");
         for (MusicInfo musicInfo : musicInfoList) {
             System.out.println(musicInfo.toString());
         }
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(musicInfoList);
 //        recyclerListAdapt.setListener(new RecyclerListAdapt.OnItemClickListener() {
@@ -86,12 +115,11 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setAdapter(recyclerListAdapt);
     }
 
-
     /**
      * 使用okhttp访问url接收返回值
      */
     public void musicAPISearch(String keyword) {
-//        String serverUrl = "http://192.168.180.202:3000/";
+//        String serverUrl = "http://172.17.36.223:3000/";
         String serverUrl = MainActivity.getApiMusicIP();
 
         //fullUrl最终访问的url
@@ -174,6 +202,7 @@ public class SearchActivity extends AppCompatActivity {
 
     /**
      * 初始化音乐搜索数据列表
+     *
      * @param music
      */
     public void initMusicData(JSONObject music) {
@@ -196,4 +225,5 @@ public class SearchActivity extends AppCompatActivity {
         musicInfo.setMusicSinger(AllSinger.toString());
         musicInfoList.add(musicInfo);
     }
+
 }

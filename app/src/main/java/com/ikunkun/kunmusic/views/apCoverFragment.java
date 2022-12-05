@@ -1,6 +1,7 @@
 package com.ikunkun.kunmusic.views;
 
 import android.animation.ObjectAnimator;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.ikunkun.kunmusic.R;
 
 public class apCoverFragment extends Fragment implements View.OnClickListener {
     private static ObjectAnimator animator;
+    public static ImageView apCover;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,7 +30,7 @@ public class apCoverFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ImageView apCover = view.findViewById(R.id.apCover);
+        apCover = view.findViewById(R.id.apCover);
         animator = ObjectAnimator.ofFloat(apCover, "rotation", 0f, 360.0f);
         animator.setDuration(30000);
         animator.setInterpolator(new LinearInterpolator());
@@ -57,5 +59,11 @@ public class apCoverFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
 
+    }
+
+    public static class coverControl{
+        public void setApCover(Bitmap resource) {
+            apCover.setImageBitmap(resource);
+        }
     }
 }
