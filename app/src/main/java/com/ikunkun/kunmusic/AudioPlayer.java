@@ -143,6 +143,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setStatusBarTranslucent();
         setContentView(R.layout.activity_audio_player);
+        mContext = getApplicationContext();
 
         SharedPreferences sp = getSharedPreferences("apStatus",MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
