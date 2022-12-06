@@ -195,7 +195,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         if (allGranted) {
                             //通过后的业务逻辑
                             list = MusicUtils.getMusicData(requireActivity());
-                            System.out.println("当前本地音乐数量" + LitePal.findAll(MusicInfo.class).size());
+                            System.out.println("当前本地音乐数量"+LitePal.findAll(MusicInfo.class).size());
                         } else {
 //                            show("您拒绝了如下权限：" + deniedList);
                         }
