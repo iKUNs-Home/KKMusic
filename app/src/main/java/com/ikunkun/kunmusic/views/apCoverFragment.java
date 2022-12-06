@@ -56,6 +56,13 @@ public class apCoverFragment extends Fragment implements View.OnClickListener {
         public boolean isStartAnimator(){
             return animator.isStarted();
         }
+        public boolean isAnimatorNull(){
+            if (animator == null){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 
 

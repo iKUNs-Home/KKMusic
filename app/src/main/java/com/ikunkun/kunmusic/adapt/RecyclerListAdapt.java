@@ -16,9 +16,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,10 +48,12 @@ import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 import com.ikunkun.kunmusic.comn.UserInfo;
 import com.ikunkun.kunmusic.service.MusicService;
+import com.ikunkun.kunmusic.tools.DownloadUtil;
 
 import org.litepal.LitePal;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -71,6 +75,7 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
     Context context;
     LinearLayout songItem;
     private androidx.recyclerview.widget.RecyclerView recyclerView;
+
     @Override
     public void onClick(View view) {
         int position = (int) view.getTag();
@@ -89,16 +94,17 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
 //            mzDownload = itemView.findViewById(R.id.mzListDownload);
             listView = itemView;
             mzListDownload = itemView.findViewById(R.id.mzListDownload);
-            songItem = itemView.findViewById(R.id.each_songItem);;
+            songItem = itemView.findViewById(R.id.each_songItem);
+            ;
         }
     }
 
 
     //构造函数
     public RecyclerListAdapt(List<MusicInfo> musicInfoList
-            ,androidx.recyclerview.widget.RecyclerView recyclerView) {
+            , androidx.recyclerview.widget.RecyclerView recyclerView) {
         this.musicInfoList = musicInfoList;
-        this.recyclerView=recyclerView;
+        this.recyclerView = recyclerView;
     }
 
 
@@ -148,8 +154,9 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
         btn_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "功能开发中...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "正在下载...", Toast.LENGTH_SHORT).show();
 //                Toast.makeText(MainActivity.this, "你点击了下载~", Toast.LENGTH_SHORT).show();
+                MusicSearchByIDForDownload(musicInfoList.get(position).getMusicId(), position);
                 popWindow.dismiss();
             }
         });
@@ -175,7 +182,54 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
                     if (flag == 1) {
                         Toast.makeText(context, "已在收藏列表中~", Toast.LENGTH_SHORT).show();
                     } else {
-                        MusicSearchByIDForLike(musicInfoList.get(position).getMusicId(), list, position);
+                        if(musicInfoList.get(position).getMusicId()==null){
+                            UserInfo userInfo = new UserInfo();
+                            userInfo.setUserName(list.get(0).getUserName());
+                            userInfo.setUserPwd(list.get(0).getUserPwd());
+                            userInfo.setUserId(list.get(0).getUserId());
+                            userInfo.setIlikename(list.get(0).getIlikename());
+                            userInfo.setIlikesinger(list.get(0).getIlikesinger());
+                            userInfo.setIlikeurl(list.get(0).getIlikeurl());
+                            userInfo.setILikeCoverUrl(list.get(0).getILikeCoverUrl());
+//                    删除旧的数据
+                            list.get(0).delete();
+                            System.out.println(musicInfoList.get(position).getMusicName() + "---" + musicInfoList.get(position).getMusicSinger());
+
+//                    歌名
+                            userInfo.setIlikename(userInfo.getIlikename() + "---" + musicInfoList.get(position).getMusicName());
+//                    歌手
+                            userInfo.setIlikesinger(userInfo.getIlikesinger() + "---" + musicInfoList.get(position).getMusicSinger());
+//                    封面
+                            userInfo.setILikeCoverUrl(userInfo.getILikeCoverUrl() + "---" + musicInfoList.get(position).getPageImg());
+                            System.out.println("list " + musicInfoList.get(position).getPageImg());
+
+//                    url
+//                userInfo.setIlikesinger(userInfo.getIlikeurl() + "---" + musicInfoList.get(position).getMusicUrl());
+                            System.out.println("position " + position);
+                            if (musicInfoList.get(position).getMusicPath() != null) {
+                                System.out.println("like = " + musicInfoList.get(position).getMusicPath());
+                                userInfo.setIlikeurl(userInfo.getIlikeurl() + "---" + musicInfoList.get(position).getMusicPath());
+                            } else {
+                                System.out.println("like = " + musicInfoList.get(position).getMusicUrl());
+                                userInfo.setIlikeurl(userInfo.getIlikeurl() + "---" + musicInfoList.get(position).getMusicUrl());
+                            }
+
+//                            MusicInfo musicInfo = new MusicInfo();
+//                            musicInfo.setMusicName(musicInfoList.get(position).getMusicName());
+//                            musicInfo.setMusicSinger(musicInfoList.get(position).getMusicSinger());
+//                            musicInfo.setMusicPath(musicInfoList.get(position).getMusicUrl());
+//                            musicInfo.setPageImg(musicInfoList.get(position).getPageImg());
+//                            App.curUserMusicList.add(musicInfo);
+
+//                      userInfo.setIlikes(userInfo.getIlikesinger()+"---"+musicInfoList.get(position).getMusicSinger());
+                            System.out.println("length:" + userInfo.getIlikesinger().split("---").length + "user:" + userInfo.getUserName());
+//                        System.out.println("test3"+userInfo.getIlikename());
+//                    保存新的数据
+                            userInfo.save();
+                        }else {
+                            MusicSearchByIDForLike(musicInfoList.get(position).getMusicId(), list, position);
+                        }
+
                         Toast.makeText(context, "收藏成功~", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -215,7 +269,6 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
     }
 
 
-
     //这个函数用来设置布局控件中每个项目(通过position)的数据
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
@@ -241,10 +294,10 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
 //            }
 //        });
         Bitmap musicimage = null;
-        if (musicInfoList.get(pos).getBase64()==null) {
+        if (musicInfoList.get(pos).getBase64() == null) {
             System.out.println("image is null");
-        }else{
-            musicimage=base64ToBitmap(musicInfoList.get(pos).getBase64());
+        } else {
+            musicimage = base64ToBitmap(musicInfoList.get(pos).getBase64());
         }
         if (musicimage != null) {
             Drawable bmpDraw = new BitmapDrawable(musicimage);
@@ -466,17 +519,17 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
                 userInfo.setIlikesinger(userInfo.getIlikesinger() + "---" + musicInfoList.get(position).getMusicSinger());
 //                    封面
                 userInfo.setILikeCoverUrl(userInfo.getILikeCoverUrl() + "---" + musicInfoList.get(position).getPageImg());
-                System.out.println("list "+musicInfoList.get(position).getPageImg());
+                System.out.println("list " + musicInfoList.get(position).getPageImg());
 
 //                    url
 //                userInfo.setIlikesinger(userInfo.getIlikeurl() + "---" + musicInfoList.get(position).getMusicUrl());
                 System.out.println("position " + position);
                 if (musicInfoList.get(position).getMusicPath() != null) {
                     System.out.println("like = " + musicInfoList.get(position).getMusicPath());
-                    userInfo.setIlikeurl(userInfo.getIlikeurl() + "---" +musicInfoList.get(position).getMusicPath());
+                    userInfo.setIlikeurl(userInfo.getIlikeurl() + "---" + musicInfoList.get(position).getMusicPath());
                 } else {
                     System.out.println("like = " + musicInfoList.get(position).getMusicUrl());
-                    userInfo.setIlikeurl(userInfo.getIlikeurl() + "---" +musicInfoList.get(position).getMusicUrl());
+                    userInfo.setIlikeurl(userInfo.getIlikeurl() + "---" + musicInfoList.get(position).getMusicUrl());
                 }
 
                 MusicInfo musicInfo = new MusicInfo();
@@ -497,12 +550,67 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
         });
     }
 
+    public void MusicSearchByIDForDownload(String id, int position) {
+//        String serverUrl = "http://172.17.115.69:3000/";
+        String serverUrl = MainActivity.getApiMusicIP();
+
+        //fullUrl最终访问的url
+        String fullUrl = serverUrl + "song/url?id=" + id;
+        System.out.println("请求的url=" + fullUrl);
+
+        //1.创建OkHttpClient对象
+        OkHttpClient okHttpClient = new OkHttpClient();
+        //2.创建Request对象，设置一个url地址（百度地址）,设置请求方式。
+        Request request = new Request.Builder().url(fullUrl).method("GET", null).build();
+        //3.创建一个call对象,参数就是Request请求对象
+        Call call = okHttpClient.newCall(request);
+        //4.请求加入调度，重写回调方法
+        call.enqueue(new Callback() {
+            //请求失败执行的方法
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //向handle发送消息
+//                Message msg = AudioPlayer.musicSetHandler.obtainMessage();
+//                msg.what = 301;
+//                AudioPlayer.musicSetHandler.sendMessage(msg);
+            }
+
+            //请求成功执行的方法
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String body = response.body().string();
+                Gson gson = new Gson();
+                JSONObject responseJSON = gson.fromJson(body, JSONObject.class);
+                JSONArray result = responseJSON.getJSONArray("data");
+//                System.out.println(result);
+                String url = null;
+                //遍历搜索结果
+                for (int i = 0; i < result.size(); i++) {
+                    JSONObject song = result.getJSONObject(i);
+                    url = song.getString("url");
+                    musicInfoList.get(position).setMusicUrl(url);
+                    System.out.println(musicInfoList.get(position).getMusicUrl());
+                }
+
+                /*@
+                 * 文件下载 url：地址 filepateh： 存放文件路径  filename: 文件名字（需要自行添加下载后的后缀名，）
+                 *
+                 */
+                String dirName = Environment.getExternalStorageDirectory().getPath() + "/Music/ikunMusic";
+                System.out.println(dirName);
+                String songName = musicInfoList.get(position).getMusicName();
+                String singName = musicInfoList.get(position).getMusicSinger();
+                downFile(url, dirName, songName + "-" + singName + ".mp3");
+            }
+        });
+    }
+
     //bitmap转化
     public static Bitmap getBitmap(byte[] data) {
         return BitmapFactory.decodeByteArray(data, 0, data.length);//从字节数组解码位图
     }
 
-    public static byte[] getBytes(Bitmap bitmap){
+    public static byte[] getBytes(Bitmap bitmap) {
         //实例化字节数组输出流
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);//压缩位图
@@ -530,7 +638,7 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
 
     public static Bitmap base64ToBitmap(String base64Data) {
         byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length );
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
 
@@ -551,5 +659,32 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
 
     public interface OnItemClickListener {
         void onClick(View view);
+    }
+
+    private void downFile(String url, String filepath, String filename) {
+        DownloadUtil.get().download(url, filepath, filename,
+                new DownloadUtil.OnDownloadListener() {
+                    @Override
+                    public void onDownloadSuccess(File file) {
+                        //下载成功
+                        Log.i("LZ---", "onDownloadSuccess:....... ..................文件下载成功..............................");
+                        //下载成功后需要做的事
+                    }
+
+                    @Override
+                    public void onDownloading(int progress) {
+                        //下载中
+                        Log.i("LZ---", "onDownloading:..............................文件下载中................................");
+                        System.out.println(progress);
+                    }
+
+                    @Override
+                    public void onDownloadFailed(Exception e) {
+                        //下载异常进行相关提示操作
+                        Log.e("lz---", "onDownloadFailed:..........................下载文件失败...............................");
+                        //文件下载失败之后的处理
+
+                    }
+                });
     }
 }

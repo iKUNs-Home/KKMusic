@@ -12,8 +12,8 @@
         android:id="@+id/tab_community"
         android:icon="@drawable/community"
         android:title="鲲群"/>
-    <item
-        android:id="@+id/tab_about"
-        android:icon="@drawable/about"
-        android:title="关于"/>
+<!--    <item-->
+<!--        android:id="@+id/tab_about"-->
+<!--        android:icon="@drawable/about"-->
+<!--        android:title="关于"/>-->
 </menu>

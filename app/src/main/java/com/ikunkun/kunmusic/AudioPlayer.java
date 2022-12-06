@@ -327,7 +327,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 
             if (musicControl.isPlaying()) {
                 apPlay.setBackgroundResource(R.drawable.play);
-                if (!animatorControl.isStartAnimator()) {
+                if (!animatorControl.isAnimatorNull() && !animatorControl.isStartAnimator()) {
                     animatorControl.startAnimator();
                 }
             } else {

@@ -17,14 +17,20 @@ import androidx.viewpager.widget.ViewPager;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -40,6 +46,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -49,6 +56,7 @@ import com.ikunkun.kunmusic.adapt.RecyclerListAdapt;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 import com.ikunkun.kunmusic.comn.UserInfo;
 import com.ikunkun.kunmusic.service.MusicService;
+import com.ikunkun.kunmusic.tools.DownloadUtil;
 import com.ikunkun.kunmusic.views.AboutFragment;
 import com.ikunkun.kunmusic.views.CommunityFragment;
 import com.ikunkun.kunmusic.views.HomeFragment;
@@ -62,6 +70,7 @@ import com.xiaoyouProject.searchbox.entity.CustomLink;
 
 import org.litepal.LitePal;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,9 +89,11 @@ public class MainActivity extends AppCompatActivity {
     private static MusicService.MusicControl musicControl;
     private static apCoverFragment.controlAnimator animatorControl;
     private static Context mContext;
-    private static final String apiMusicIP = "http://172.17.36.223:3000/";
+    private static final String apiMusicIP = "http://192.168.152.202:3000/";
     private static TextView pcbName, pcbSinger;
     private static Bundle curMusicInfo;
+    private static long downloadId;
+    private static DownloadManager downloadManager;
 
 
     public void setStatusBarTranslucent() {
@@ -107,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 case 311:
 //                    Bundle bundle2 = msg.getData();
                     curMusicInfo = msg.getData();
-                    System.out.println("curMusicInfo"+curMusicInfo);
+                    System.out.println("curMusicInfo" + curMusicInfo);
                     String musicPath = curMusicInfo.getString("musicUrl");
 //                    String musicName = bundle2.getString("musicName");
 //                    String musicSinger = bundle2.getString("musicSinger");
@@ -369,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(new HomeFragment());
         fragments.add(new MineFragment());
         fragments.add(new CommunityFragment());
-        fragments.add(new AboutFragment());
+//        fragments.add(new AboutFragment());
 
         //初始化viewpager的自定义适配器
         FragmentAdapter fragmentAdapter = new FragmentAdapter(fragments, getSupportFragmentManager());
@@ -418,8 +429,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.tab_mine:
                         viewPager.setCurrentItem(1);
-                        Intent in = new Intent(MainActivity.this, AudioPlayer.class);
-                        startActivity(in);
+//                        Intent in = new Intent(MainActivity.this, AudioPlayer.class);
+//                        startActivity(in);
                         break;
                     case R.id.tab_community:
                         viewPager.setCurrentItem(2);
@@ -430,20 +441,21 @@ public class MainActivity extends AppCompatActivity {
 //                        fragmentTransaction.remove(testFragment);
 //                        fragmentTransaction.commit();
                         break;
-                    case R.id.tab_about:
-                        viewPager.setCurrentItem(3);
-//                        bnView.setVisibility(View.GONE);
-//                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
-//                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//                        FragmentManager fragmentManager = getSupportFragmentManager();
-//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                        com.ikunkun.kunmusic.views.SearchFragment searchFragment1 = new com.ikunkun.kunmusic.views.SearchFragment();
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("keyword","666");
-//                        searchFragment1.setArguments(bundle);
-//                        fragmentTransaction.add(R.id.mainFragment,searchFragment1);
-//                        fragmentTransaction.commit();
-                        break;
+//                    case R.id.tab_about:
+//                        viewPager.setCurrentItem(3);
+////                        bnView.setVisibility(View.GONE);
+////                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+////                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+////                        FragmentManager fragmentManager = getSupportFragmentManager();
+////                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+////                        com.ikunkun.kunmusic.views.SearchFragment searchFragment1 = new com.ikunkun.kunmusic.views.SearchFragment();
+////                        Bundle bundle = new Bundle();
+////                        bundle.putString("keyword","666");
+////                        searchFragment1.setArguments(bundle);
+////                        fragmentTransaction.add(R.id.mainFragment,searchFragment1);
+////                        fragmentTransaction.commit();
+//                        System.out.println(Environment.getExternalStorageDirectory().getPath()+"/Music/ikunMusic");
+//                        break;
                 }
 
                 return false;
@@ -476,4 +488,6 @@ public class MainActivity extends AppCompatActivity {
     public static String getApiMusicIP() {
         return apiMusicIP;
     }
+
 }
+
