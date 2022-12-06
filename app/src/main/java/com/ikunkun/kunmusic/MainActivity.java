@@ -103,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
     private static DownloadManager downloadManager;
     private static ShapeableImageView pcbCover;
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
+    }
 
     public void setStatusBarTranslucent() {
         StatusBarUtil.setTranslucentForImageViewInFragment(this,
