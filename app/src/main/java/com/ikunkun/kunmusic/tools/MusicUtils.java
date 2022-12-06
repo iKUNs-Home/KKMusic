@@ -99,7 +99,7 @@ public class MusicUtils {
      * @return
      */
     private static Bitmap loadingCover(String mediaUri) {
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        MediaMetadataRetriever mediaMetadataRetriever=new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(mediaUri);
         byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
         Bitmap bitmap = null;
