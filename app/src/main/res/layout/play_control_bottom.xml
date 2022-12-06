@@ -18,7 +18,7 @@
             android:id="@+id/pcb_cover"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/cover1"
+            android:background="@drawable/cover2"
             android:padding="2dp"
             app:shapeAppearance="@style/CircleStyle"
             app:strokeColor="@color/white"

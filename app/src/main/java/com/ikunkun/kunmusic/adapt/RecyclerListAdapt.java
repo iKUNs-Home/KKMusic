@@ -345,6 +345,7 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
         bundle.putString("musicCover", musicInfoList.get(position).getPageImg());
         bundle.putString("musicSinger", musicInfoList.get(position).getMusicSinger());
         bundle.putString("musicName", musicInfoList.get(position).getMusicName());
+        bundle.putString("musicBase",musicInfoList.get(position).getBase64());
         System.out.println(bundle);
 
         if (apIsActive) {
@@ -352,6 +353,11 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
             msg.setData(bundle);
             msg.what = 310;
             AudioPlayer.musicSetHandler.sendMessage(msg);
+
+            Message msg2 = MainActivity.handler.obtainMessage();
+            msg2.setData(bundle);
+            msg2.what = 310;
+            MainActivity.handler.sendMessage(msg2);
 
             Intent ap = new Intent(context, AudioPlayer.class);
             context.startActivity(ap);
@@ -443,6 +449,11 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
                     msg.setData(bundle);
                     msg.what = 300;
                     AudioPlayer.musicSetHandler.sendMessage(msg);
+
+                    Message msg2 = MainActivity.handler.obtainMessage();
+                    msg2.setData(bundle);
+                    msg2.what = 300;
+                    MainActivity.handler.sendMessage(msg2);
 
                     Intent ap = new Intent(context, AudioPlayer.class);
                     context.startActivity(ap);

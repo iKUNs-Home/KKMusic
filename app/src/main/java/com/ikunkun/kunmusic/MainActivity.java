@@ -1,6 +1,7 @@
 package com.ikunkun.kunmusic;
 
 import static com.ikunkun.kunmusic.App.curUserMusicList;
+import static com.ikunkun.kunmusic.adapt.RecyclerListAdapt.base64ToBitmap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,7 +52,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 import com.ikunkun.kunmusic.adapt.FragmentAdapter;
 import com.ikunkun.kunmusic.adapt.RecyclerListAdapt;
@@ -57,6 +63,7 @@ import com.ikunkun.kunmusic.comn.MusicInfo;
 import com.ikunkun.kunmusic.comn.UserInfo;
 import com.ikunkun.kunmusic.service.MusicService;
 import com.ikunkun.kunmusic.tools.DownloadUtil;
+import com.ikunkun.kunmusic.tools.ImageFilter;
 import com.ikunkun.kunmusic.views.AboutFragment;
 import com.ikunkun.kunmusic.views.CommunityFragment;
 import com.ikunkun.kunmusic.views.HomeFragment;
@@ -94,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     private static Bundle curMusicInfo;
     private static long downloadId;
     private static DownloadManager downloadManager;
+    private static ShapeableImageView pcbCover;
 
 
     public void setStatusBarTranslucent() {
@@ -107,6 +115,36 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
+                case 300:
+                case 310:
+                    System.out.println("----------------");
+                    curMusicInfo = msg.getData();
+                    String musicName = curMusicInfo.getString("musicName");
+                    String musicSinger = curMusicInfo.getString("musicSinger");
+                    String mzCover = curMusicInfo.getString("musicCover");
+                    String mzBase = curMusicInfo.getString("musicBase");
+
+                    if (mzCover == null) {
+                        if (mzBase == null) {
+                            pcbCover.setImageResource(R.drawable.cover1);
+                        }else {
+                            System.out.println("base:" + mzBase);
+                            Bitmap resource = base64ToBitmap(mzBase);
+                            pcbCover.setImageBitmap(resource);
+                        }
+//            Drawable drawable=new BitmapDrawable(resource);
+//            coverControl.setApCoverDrawable(drawable);
+                    } else {
+                        Glide.with(mContext).asBitmap().load(mzCover).into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                pcbCover.setImageBitmap(resource);
+                            }
+                        });
+                    }
+                    pcbName.setText(musicName);
+                    pcbSinger.setText(musicSinger);
+                    break;
                 case 107:
                     pcbPlay.setBackgroundResource(R.drawable.play);
                     System.out.println("107");
@@ -125,6 +163,29 @@ public class MainActivity extends AppCompatActivity {
 //                    pcbName.setText(musicName);
 //                    pcbSinger.setText(musicSinger);
                     System.out.println("Handler " + musicPath);
+
+                    String mzCover2 = curMusicInfo.getString("musicCover");
+                    String mzBase2 = curMusicInfo.getString("musicBase");
+
+                    if (mzCover2 == null) {
+                        if (mzBase2 == null) {
+                            pcbCover.setImageResource(R.drawable.cover1);
+                        }else {
+                            System.out.println("base:" + mzBase2);
+                            Bitmap resource = base64ToBitmap(mzBase2);
+                            pcbCover.setImageBitmap(resource);
+                        }
+//            Drawable drawable=new BitmapDrawable(resource);
+//            coverControl.setApCoverDrawable(drawable);
+                    } else {
+                        Glide.with(mContext).asBitmap().load(mzCover2).into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                pcbCover.setImageBitmap(resource);
+                            }
+                        });
+                    }
+
                     musicControl.ReSetMusic(musicPath, curMusicInfo);
                     break;
             }
@@ -271,6 +332,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = getApplicationContext();
+
+        pcbCover = findViewById(R.id.pcb_cover);
 
         pcbInit();
         RelativeLayout relativeLayout = findViewById(R.id.pcbControl);

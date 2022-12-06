@@ -152,6 +152,7 @@ public class MusicService extends Service {
             Bundle bundle = new Bundle();
             bundle.putString("musicName", App.curUserMusicList.get(curMusicListPosition).getMusicName());
             bundle.putString("musicSinger", App.curUserMusicList.get(curMusicListPosition).getMusicSinger());
+            bundle.putString("musicBase",App.curUserMusicList.get(curMusicListPosition).getBase64());
             if (url != null) {
                 ReSetMusic(url, bundle);
             } else {
@@ -171,6 +172,7 @@ public class MusicService extends Service {
             Bundle bundle = new Bundle();
             bundle.putString("musicName", App.curUserMusicList.get(curMusicListPosition).getMusicName());
             bundle.putString("musicSinger", App.curUserMusicList.get(curMusicListPosition).getMusicSinger());
+            bundle.putString("musicBase",App.curUserMusicList.get(curMusicListPosition).getBase64());
             if (url != null) {
                 ReSetMusic(url, bundle);
             } else {
@@ -219,6 +221,11 @@ public class MusicService extends Service {
                         Message msg = AudioPlayer.handler3.obtainMessage();
                         msg.setData(bundle);
                         AudioPlayer.handler3.sendMessage(msg);
+                        System.out.println(bundle);
+                        Message msg2 = MainActivity.handler.obtainMessage();
+                        msg2.what=310;
+                        msg2.setData(bundle);
+                        MainActivity.handler.sendMessage(msg2);
                     } else {
                         Message msg = MainActivity.handler2.obtainMessage();
                         msg.setData(bundle);

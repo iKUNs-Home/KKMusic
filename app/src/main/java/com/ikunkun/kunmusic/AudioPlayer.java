@@ -1,5 +1,7 @@
 package com.ikunkun.kunmusic;
 
+import static com.ikunkun.kunmusic.adapt.RecyclerListAdapt.base64ToBitmap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +25,6 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -33,7 +34,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.material.snackbar.Snackbar;
 import com.ikunkun.kunmusic.adapt.FragmentAdapter;
 import com.ikunkun.kunmusic.service.MusicService;
 import com.ikunkun.kunmusic.tools.ImageFilter;
@@ -46,7 +46,7 @@ import java.util.List;
 
 public class AudioPlayer extends AppCompatActivity implements View.OnClickListener {
 
-    private static ImageView apBlurBK;
+    public static ImageView apBlurBK;
     private static ImageButton apNext;
     private static ImageButton apPrevious;
     private static ImageButton apPlay;
@@ -55,7 +55,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
     private static ImageButton apLike;
 
     private static SeekBar mSeekBar;
-    private static TextView apProgress, apTotal, apName, apSinger;
+    public static TextView apProgress, apTotal, apName, apSinger;
     private ObjectAnimator animator;
     private static MusicService.MusicControl musicControl;
     private static apCoverFragment.controlAnimator animatorControl;
@@ -69,6 +69,8 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 
     static apCoverFragment.coverControl coverControl;
 
+    public static Bundle apBundle = new Bundle();
+
     public void setStatusBarTranslucent() {
         StatusBarUtil.setTranslucentForImageViewInFragment(this,
                 0, null);
@@ -80,13 +82,13 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case 300:
-                    Bundle bundle = msg.getData();
-                    String musicUrl = bundle.getString("musicUrl");
-                    String musicCoverUrl = bundle.getString("musicCover");
+                    apBundle = msg.getData();
+                    String musicUrl = apBundle.getString("musicUrl");
+                    String musicCoverUrl = apBundle.getString("musicCover");
                     System.out.println("Handler " + musicUrl);
                     System.out.println("Handler " + musicCoverUrl);
 
-                    musicControl.ReSetMusic(musicUrl, bundle);
+                    musicControl.ReSetMusic(musicUrl, apBundle);
                     System.out.println("2222");
                     Glide.with(mContext).asBitmap().load(musicCoverUrl).into(new SimpleTarget<Bitmap>() {
                         @Override
@@ -102,14 +104,42 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
                     Toast.makeText(mContext, "很抱歉。您没有权限播放此歌曲", Toast.LENGTH_SHORT).show();
                     break;
                 case 310:
-                    Bundle bundle2 = msg.getData();
-                    String musicPath = bundle2.getString("musicUrl");
+                    apBundle = msg.getData();
+                    String musicPath = apBundle.getString("musicUrl");
+                    String mzCover = apBundle.getString("musicCover");
+                    String mzBase = apBundle.getString("musicBase");
+
+                    if (mzCover == null) {
+                        if (mzBase == null) {
+                            coverControl.setApCoverResource(R.drawable.cover1);
+                            Bitmap resource = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.cover1);
+                            Bitmap BlurBackground = ImageFilter.blurBitmap(mContext, resource, 25f);
+                            AudioPlayer.apBlurBK.setImageBitmap(BlurBackground);
+                        }else {
+                            System.out.println("base:" + mzBase);
+                            Bitmap resource = base64ToBitmap(mzBase);
+                            Bitmap BlurBackground = ImageFilter.blurBitmap(mContext, resource, 25f);
+                            AudioPlayer.apBlurBK.setImageBitmap(BlurBackground);
+                            coverControl.setApCover(resource);
+                        }
+//            Drawable drawable=new BitmapDrawable(resource);
+//            coverControl.setApCoverDrawable(drawable);
+                    } else {
+                        Glide.with(mContext).asBitmap().load(mzCover).into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                Bitmap BlurBackground = ImageFilter.blurBitmap(mContext, resource, 25f);
+                                apBlurBK.setImageBitmap(BlurBackground);
+                                coverControl.setApCover(resource);
+                            }
+                        });
+                    }
 //                    String musicName = bundle2.getString("musicName");
 //                    String musicSinger = bundle2.getString("musicSinger");
 //                    apName.setText(musicName);
 //                    apSinger.setText(musicSinger);
                     System.out.println("Handler " + musicPath);
-                    musicControl.ReSetMusic(musicPath, bundle2);
+                    musicControl.ReSetMusic(musicPath, apBundle);
             }
         }
     };
@@ -117,11 +147,40 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
     public static Handler handler3 = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            Bundle bundle = msg.getData();
-            String musicName = bundle.getString("musicName");
-            String musicSinger = bundle.getString("musicSinger");
+            apBundle = msg.getData();
+            String musicName = apBundle.getString("musicName");
+            String musicSinger = apBundle.getString("musicSinger");
+            String mzCover = apBundle.getString("musicCover");
+            String mzBase = apBundle.getString("musicBase");
+
             apName.setText(musicName);
             apSinger.setText(musicSinger);
+
+            if (mzCover == null) {
+                if (mzBase == null) {
+                    coverControl.setApCoverResource(R.drawable.cover1);
+                    Bitmap resource = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.cover1);
+                    Bitmap BlurBackground = ImageFilter.blurBitmap(mContext, resource, 25f);
+                    AudioPlayer.apBlurBK.setImageBitmap(BlurBackground);
+                }else {
+                    System.out.println("base:" + mzBase);
+                    Bitmap resource = base64ToBitmap(mzBase);
+                    Bitmap BlurBackground = ImageFilter.blurBitmap(mContext, resource, 25f);
+                    AudioPlayer.apBlurBK.setImageBitmap(BlurBackground);
+                    coverControl.setApCover(resource);
+                }
+//            Drawable drawable=new BitmapDrawable(resource);
+//            coverControl.setApCoverDrawable(drawable);
+            } else {
+                Glide.with(mContext).asBitmap().load(mzCover).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        Bitmap BlurBackground = ImageFilter.blurBitmap(mContext, resource, 25f);
+                        apBlurBK.setImageBitmap(BlurBackground);
+                        coverControl.setApCover(resource);
+                    }
+                });
+            }
             apPlayMZ();
         }
     };
@@ -153,6 +212,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("这里是AudioPlayer");
         super.onCreate(savedInstanceState);
         setStatusBarTranslucent();
         setContentView(R.layout.activity_audio_player);
@@ -173,22 +233,28 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 //        apBlurBK.setImageBitmap(BlurBackground);
         init();
 
-        Bundle bundle = getIntent().getExtras();
-        String mzName = bundle.getString("musicName");
-        String mzSinger = bundle.getString("musicSinger");
-        String mzCover = bundle.getString("musicCover");
+//        Bundle bundle = getIntent().getExtras();
+//        String mzName = bundle.getString("musicName");
+//        String mzSinger = bundle.getString("musicSinger");
+//        String mzCover = bundle.getString("musicCover");
+//
+//        Bundle bundle = getIntent().getExtras();
+//        String mzName = bundle.getString("musicName");
+//        String mzSinger = bundle.getString("musicSinger");
+//        String mzCover = bundle.getString("musicCover");
 
-        apName.setText(mzName);
-        apSinger.setText(mzSinger);
 
-        Glide.with(mContext).asBitmap().load(mzCover).into(new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                Bitmap BlurBackground = ImageFilter.blurBitmap(mContext, resource, 25f);
-                apBlurBK.setImageBitmap(BlurBackground);
-                coverControl.setApCover(resource);
-            }
-        });
+//        apName.setText(mzName);
+//        apSinger.setText(mzSinger);
+
+//        Glide.with(mContext).asBitmap().load(mzCover).into(new SimpleTarget<Bitmap>() {
+//            @Override
+//            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                Bitmap BlurBackground = ImageFilter.blurBitmap(mContext, resource, 25f);
+//                apBlurBK.setImageBitmap(BlurBackground);
+//                coverControl.setApCover(resource);
+//            }
+//        });
     }
 
     public boolean isServiceRunning(Context mContext, String className) {
@@ -224,7 +290,10 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 
         apViewPager = findViewById(R.id.centerView);
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new apCoverFragment());
+        Fragment apCoverFragment = new apCoverFragment();
+        apBundle = getIntent().getExtras();
+        apCoverFragment.setArguments(apBundle);
+        fragments.add(apCoverFragment);
         fragments.add(new apLyricFragment());
         FragmentAdapter fragmentAdapter = new FragmentAdapter(fragments, getSupportFragmentManager());
         apViewPager.setAdapter(fragmentAdapter);
@@ -255,7 +324,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
             bindService(mIntent, mcn, BIND_AUTO_CREATE);
             apBlurBK = findViewById(R.id.apBlurBackground);
             Resources res = mContext.getResources();
-            Bitmap background = BitmapFactory.decodeResource(res, R.drawable.cover1);
+            Bitmap background = BitmapFactory.decodeResource(res, R.drawable.cover2);
             Bitmap BlurBackground = ImageFilter.blurBitmap(this, background, 25f);
             apBlurBK.setImageBitmap(BlurBackground);
 //            System.out.println(6666666);
@@ -379,6 +448,7 @@ public class AudioPlayer extends AppCompatActivity implements View.OnClickListen
 //                musicControl.continuePlay(nowProgress);
 //                animator.start();
                 musicControl.nextMusic();
+
                 break;
             case R.id.ib_back:
                 moveTaskToBack(true);
