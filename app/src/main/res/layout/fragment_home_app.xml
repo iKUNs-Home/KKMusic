@@ -1,12 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".views.HomeFragment"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="vertical">
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/iv_beauty"
+        android:layout_width="match_parent"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_height="150dp"
+        android:src="@drawable/strong"
+        android:scaleType="centerCrop"
+        app:riv_corner_radius_bottom_left="15dp"
+        app:riv_corner_radius_bottom_right="15dp"
+        app:riv_corner_radius_top_left="15dp"
+        app:riv_corner_radius_top_right="15dp" />
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aw与宝藏女歌手Ina再次合作新单曲！"
+            android:textSize="15dp"/>
+    </LinearLayout>
 
     <TextView
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="APP首页\n欢迎使用~~~" />
-
-</RelativeLayout>
+        android:layout_marginLeft="20dp"
+        android:text="今日推荐>"
+        android:textColor="#000000"
+        android:textSize="17dp" />
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="120dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="120dp"
+            android:src="@drawable/cgwth"
+            android:scaleType="centerCrop"
+            app:riv_corner_radius_bottom_left="15dp"
+            app:riv_corner_radius_bottom_right="15dp"
+            app:riv_corner_radius_top_left="15dp"
+            app:riv_corner_radius_top_right="15dp" />
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="你给我听好"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="120dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_height="120dp"
+            android:src="@drawable/dans"
+            android:scaleType="centerCrop"
+            app:riv_corner_radius_bottom_left="15dp"
+            app:riv_corner_radius_bottom_right="15dp"
+            app:riv_corner_radius_top_left="15dp"
+            app:riv_corner_radius_top_right="15dp" />
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dan's La Maison"/>
+        </LinearLayout>
+<!--        <com.makeramen.roundedimageview.RoundedImageView-->
+<!--            android:layout_width="120dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:layout_height="120dp"-->
+<!--            android:src="@drawable/tqzz"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            app:riv_corner_radius_bottom_left="15dp"-->
+<!--            app:riv_corner_radius_bottom_right="15dp"-->
+<!--            app:riv_corner_radius_top_left="15dp"-->
+<!--            app:riv_corner_radius_top_right="15dp" />-->
+    </LinearLayout>
+</LinearLayout>

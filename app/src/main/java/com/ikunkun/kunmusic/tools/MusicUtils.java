@@ -106,7 +106,7 @@ public class MusicUtils {
         if (picture != null) {
             bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
             Matrix matrix = new Matrix();
-            matrix.setScale(0.1f, 0.1f);
+            matrix.setScale(0.5f, 0.5f);
             bitmap=Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                     bitmap.getHeight(), matrix, true);
         }

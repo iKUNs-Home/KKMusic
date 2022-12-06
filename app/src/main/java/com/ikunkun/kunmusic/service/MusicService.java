@@ -11,12 +11,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.ikunkun.kunmusic.App;
 import com.ikunkun.kunmusic.AudioPlayer;
 import com.ikunkun.kunmusic.MainActivity;
 import com.ikunkun.kunmusic.R;
+import com.ikunkun.kunmusic.comn.MusicInfo;
 import com.ikunkun.kunmusic.views.MusicRoundProgressView;
 
 import java.io.IOException;
@@ -28,6 +31,8 @@ public class MusicService extends Service {
 
     private MediaPlayer mPlayer;
     private Timer mTimer;
+    private int curMusicListPosition = 0;
+    private boolean curPlayMode = false;
 
     public MusicService() {
     }
@@ -59,6 +64,7 @@ public class MusicService extends Service {
 //            }
 //        });
 //        mPlayer = new MediaPlayer();
+
     }
 
     @Override
@@ -110,23 +116,95 @@ public class MusicService extends Service {
                 }
             };
             mTimer.schedule(task, 5, 500);
+
         }
     }
 
     public class MusicControl extends Binder {
 
-        public void ReSetMusic(String musicUrl) {
+        public void changePlayMode() {
+            if (!mPlayer.isLooping()) {
+                mPlayer.setLooping(true);
+                System.out.println("循环");
+                curPlayMode = true;
+            } else {
+                mPlayer.setLooping(false);
+                System.out.println("不循环");
+                curPlayMode = false;
+            }
+        }
+
+        public void updateMzLPos(int pos) {
+            curMusicListPosition = pos;
+        }
+
+        public void nextMusic() {
+            if (curMusicListPosition < App.curUserMusicList.size() - 1) {
+                curMusicListPosition++;
+            } else if (curMusicListPosition == App.curUserMusicList.size() - 1) {
+                curMusicListPosition = 0;
+            }
+//            for (MusicInfo musicInfo : App.curUserMusicList) {
+//                System.out.println(musicInfo);
+//            }
+            String url = App.curUserMusicList.get(curMusicListPosition).getMusicPath();
+            System.out.println("cur " + curMusicListPosition + " " + url);
+            Bundle bundle = new Bundle();
+            bundle.putString("musicName", App.curUserMusicList.get(curMusicListPosition).getMusicName());
+            bundle.putString("musicSinger", App.curUserMusicList.get(curMusicListPosition).getMusicSinger());
+            bundle.putString("musicBase",App.curUserMusicList.get(curMusicListPosition).getBase64());
+            if (url != null) {
+                ReSetMusic(url, bundle);
+            } else {
+                nextMusic();
+                Toast.makeText(MusicService.this, "无法播放，自动播放下一首", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        public void preMusic() {
+            if (curMusicListPosition > 0) {
+                curMusicListPosition--;
+            } else if (curMusicListPosition == 0) {
+                curMusicListPosition = App.curUserMusicList.size() - 1;
+            }
+            String url = App.curUserMusicList.get(curMusicListPosition).getMusicPath();
+            System.out.println("cur " + curMusicListPosition + " " + url);
+            Bundle bundle = new Bundle();
+            bundle.putString("musicName", App.curUserMusicList.get(curMusicListPosition).getMusicName());
+            bundle.putString("musicSinger", App.curUserMusicList.get(curMusicListPosition).getMusicSinger());
+            bundle.putString("musicBase",App.curUserMusicList.get(curMusicListPosition).getBase64());
+            if (url != null) {
+                ReSetMusic(url, bundle);
+            } else {
+                preMusic();
+                Toast.makeText(MusicService.this, "无法播放，自动播放下一首", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        public void ReSetMusic(String musicUrl, Bundle bundle) {
             System.out.println("Service " + musicUrl);
             if (mPlayer.isPlaying()) mPlayer.stop();
+            if (mTimer != null) {
+                mTimer.cancel();
+                mTimer = null;
+            }
+
             mPlayer.reset();
-            mPlayer.release();
-            mPlayer = new MediaPlayer();
+//            mPlayer.release();
+//            mPlayer = new MediaPlayer();
             try {
                 mPlayer.setDataSource(musicUrl);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            if (curPlayMode){
+                mPlayer.setLooping(true);
+            }else {
+                mPlayer.setLooping(false);
+            }
+
             mPlayer.prepareAsync();
             mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -141,13 +219,37 @@ public class MusicService extends Service {
 
                     if (apIsActive) {
                         Message msg = AudioPlayer.handler3.obtainMessage();
+                        msg.setData(bundle);
                         AudioPlayer.handler3.sendMessage(msg);
+                        System.out.println(bundle);
+                        Message msg2 = MainActivity.handler.obtainMessage();
+                        msg2.what=310;
+                        msg2.setData(bundle);
+                        MainActivity.handler.sendMessage(msg2);
                     } else {
                         Message msg = MainActivity.handler2.obtainMessage();
+                        msg.setData(bundle);
                         MainActivity.handler2.sendMessage(msg);
                     }
                 }
             });
+
+            mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+                @Override
+                public void onBufferingUpdate(MediaPlayer mediaPlayer, int i) {
+                    System.out.println("当前音乐缓冲进度: " + i);
+                }
+            });
+            mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    System.out.println("播放完毕");
+                    if (!curPlayMode){
+                        nextMusic();
+                    }
+                }
+            });
+
         }
 
         public void play() {

@@ -19,7 +19,7 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout_HomeTop"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="0dp"
         app:tabSelectedTextColor="#CC668A"
         app:tabTextColor="#000000"
         app:tabIndicatorHeight="0dp"/>

@@ -35,6 +35,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         ////获取布局控件等的id
         viewPager = view.findViewById(R.id.home_view_pager);
         tabLayout = view.findViewById(R.id.tab_layout_HomeTop);
@@ -48,12 +49,12 @@ public class HomeFragment extends Fragment {
         //添加views列表
         views = new ArrayList<>();
         views.add(view1);
-        views.add(view2);
+//        views.add(view2);
 
         //添加页面标题
         titles = new ArrayList<>();
-        titles.add("APP首页");
-        titles.add("本地音乐");
+        titles.add("");
+//        titles.add("本地音乐");
 
         //初始化viewPage适配器
         ViewPageAdapt viewPageAdapt = new ViewPageAdapt(views, titles);

@@ -1,6 +1,10 @@
 package com.ikunkun.kunmusic.views;
 
 import android.Manifest;
+import static android.content.Context.MODE_PRIVATE;
+
+import android.Manifest;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -15,8 +19,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.ikunkun.kunmusic.MainActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.ikunkun.kunmusic.App;
 import com.ikunkun.kunmusic.MainActivity;
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.adapt.RecyclerListAdapt;
@@ -75,6 +81,7 @@ public class LocalMusicFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
 //                new Thread(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -111,9 +118,11 @@ public class LocalMusicFragment extends Fragment {
                         RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(list,recyclerView);
                         recyclerView.setAdapter(recyclerListAdapt);
                         Toast.makeText(getContext(), "扫描完成", Toast.LENGTH_SHORT).show();
+                        System.out.println("扫描完成");
                         break;
                     }
                 }
+
             }
         });
     }
@@ -141,7 +150,18 @@ public class LocalMusicFragment extends Fragment {
                         if (allGranted) {
                             //通过后的业务逻辑
                             list = MusicUtils.getMusicData(requireActivity());
+                            //把本地音乐全部添加到总列表
                             System.out.println("当前本地音乐数量"+LitePal.findAll(MusicInfo.class).size());
+                            SharedPreferences sp = getActivity().getSharedPreferences("localMusicListStatus", MODE_PRIVATE);
+                            boolean loIsAdd = sp.getBoolean("loMzActive", false);
+                            System.out.println("loIsAdd " + loIsAdd);
+                            if (!loIsAdd) {
+                                System.out.println(list.size());
+                                App.curUserMusicList.addAll(list);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putBoolean("loMzActive", true);
+                                editor.apply();
+                            }
                         } else {
 //                            show("您拒绝了如下权限：" + deniedList);
                         }

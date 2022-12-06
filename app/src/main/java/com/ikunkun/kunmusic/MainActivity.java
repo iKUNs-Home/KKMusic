@@ -1,5 +1,8 @@
 package com.ikunkun.kunmusic;
 
+import static com.ikunkun.kunmusic.App.curUserMusicList;
+import static com.ikunkun.kunmusic.adapt.RecyclerListAdapt.base64ToBitmap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -15,14 +18,22 @@ import androidx.viewpager.widget.ViewPager;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -38,15 +49,21 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 import com.ikunkun.kunmusic.adapt.FragmentAdapter;
 import com.ikunkun.kunmusic.adapt.RecyclerListAdapt;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 import com.ikunkun.kunmusic.comn.UserInfo;
 import com.ikunkun.kunmusic.service.MusicService;
+import com.ikunkun.kunmusic.tools.DownloadUtil;
+import com.ikunkun.kunmusic.tools.ImageFilter;
 import com.ikunkun.kunmusic.views.AboutFragment;
 import com.ikunkun.kunmusic.views.CommunityFragment;
 import com.ikunkun.kunmusic.views.HomeFragment;
@@ -60,7 +77,9 @@ import com.xiaoyouProject.searchbox.entity.CustomLink;
 
 import org.litepal.LitePal;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -77,8 +96,12 @@ public class MainActivity extends AppCompatActivity {
     private static MusicService.MusicControl musicControl;
     private static apCoverFragment.controlAnimator animatorControl;
     private static Context mContext;
-    private static final String apiMusicIP = "http://172.17.36.223:3000/";
-    private static List<MusicInfo> curUserMusicList = new ArrayList<>();
+    private static final String apiMusicIP = "http://192.168.152.202:3000/";
+    private static TextView pcbName, pcbSinger;
+    private static Bundle curMusicInfo;
+    private static long downloadId;
+    private static DownloadManager downloadManager;
+    private static ShapeableImageView pcbCover;
 
 
     public void setStatusBarTranslucent() {
@@ -92,6 +115,36 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
+                case 300:
+                case 310:
+                    System.out.println("----------------");
+                    curMusicInfo = msg.getData();
+                    String musicName = curMusicInfo.getString("musicName");
+                    String musicSinger = curMusicInfo.getString("musicSinger");
+                    String mzCover = curMusicInfo.getString("musicCover");
+                    String mzBase = curMusicInfo.getString("musicBase");
+
+                    if (mzCover == null) {
+                        if (mzBase == null) {
+                            pcbCover.setImageResource(R.drawable.cover1);
+                        }else {
+                            System.out.println("base:" + mzBase);
+                            Bitmap resource = base64ToBitmap(mzBase);
+                            pcbCover.setImageBitmap(resource);
+                        }
+//            Drawable drawable=new BitmapDrawable(resource);
+//            coverControl.setApCoverDrawable(drawable);
+                    } else {
+                        Glide.with(mContext).asBitmap().load(mzCover).into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                pcbCover.setImageBitmap(resource);
+                            }
+                        });
+                    }
+                    pcbName.setText(musicName);
+                    pcbSinger.setText(musicSinger);
+                    break;
                 case 107:
                     pcbPlay.setBackgroundResource(R.drawable.play);
                     System.out.println("107");
@@ -101,10 +154,39 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("108");
                     break;
                 case 311:
-                    Bundle bundle2 = msg.getData();
-                    String musicPath = bundle2.getString("musicPath");
+//                    Bundle bundle2 = msg.getData();
+                    curMusicInfo = msg.getData();
+                    System.out.println("curMusicInfo" + curMusicInfo);
+                    String musicPath = curMusicInfo.getString("musicUrl");
+//                    String musicName = bundle2.getString("musicName");
+//                    String musicSinger = bundle2.getString("musicSinger");
+//                    pcbName.setText(musicName);
+//                    pcbSinger.setText(musicSinger);
                     System.out.println("Handler " + musicPath);
-                    musicControl.ReSetMusic(musicPath);
+
+                    String mzCover2 = curMusicInfo.getString("musicCover");
+                    String mzBase2 = curMusicInfo.getString("musicBase");
+
+                    if (mzCover2 == null) {
+                        if (mzBase2 == null) {
+                            pcbCover.setImageResource(R.drawable.cover1);
+                        }else {
+                            System.out.println("base:" + mzBase2);
+                            Bitmap resource = base64ToBitmap(mzBase2);
+                            pcbCover.setImageBitmap(resource);
+                        }
+//            Drawable drawable=new BitmapDrawable(resource);
+//            coverControl.setApCoverDrawable(drawable);
+                    } else {
+                        Glide.with(mContext).asBitmap().load(mzCover2).into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                pcbCover.setImageBitmap(resource);
+                            }
+                        });
+                    }
+
+                    musicControl.ReSetMusic(musicPath, curMusicInfo);
                     break;
             }
         }
@@ -113,11 +195,21 @@ public class MainActivity extends AppCompatActivity {
     public static Handler handler2 = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
+            curMusicInfo = msg.getData();
+            String musicName = curMusicInfo.getString("musicName");
+            String musicSinger = curMusicInfo.getString("musicSinger");
+            pcbName.setText(musicName);
+            pcbSinger.setText(musicSinger);
             pcbPlayMZ();
         }
     };
 
     public void pcbInit() {
+        pcbName = findViewById(R.id.pcb_songName);
+        pcbSinger = findViewById(R.id.pcb_singName);
+
+        curMusicInfo = new Bundle();
+
         mIntent = new Intent(this, MusicService.class);
         mcn = new ServiceConnection() {
             @Override
@@ -148,6 +240,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent in = new Intent(MainActivity.this, AudioPlayer.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("mzName", pcbName.getText().toString());
+//                bundle.putString("mzSinger", pcbSinger.getText().toString());
+                in.putExtras(curMusicInfo);
                 startActivity(in);
             }
         });
@@ -229,6 +325,7 @@ public class MainActivity extends AppCompatActivity {
 //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("这里是MainActivity");
 
         super.onCreate(savedInstanceState);
         //设置主布局
@@ -236,13 +333,11 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
+        pcbCover = findViewById(R.id.pcb_cover);
+
         pcbInit();
         RelativeLayout relativeLayout = findViewById(R.id.pcbControl);
 
-        SharedPreferences sp = getSharedPreferences("apStatus", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.apply();
 
 //        LitePal.initialize(this);
 //        String user = "1";
@@ -279,16 +374,16 @@ public class MainActivity extends AppCompatActivity {
 //                Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
 //                searchIntent.putExtra("keyword", keyword);
 //                startActivity(searchIntent);
-                bnView.setVisibility(View.GONE);
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
-                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//                bnView.setVisibility(View.GONE);
+//                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+//                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 com.ikunkun.kunmusic.views.SearchFragment searchFragment1 = new com.ikunkun.kunmusic.views.SearchFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("keyword",keyword);
+                bundle.putString("keyword", keyword);
                 searchFragment1.setArguments(bundle);
-                fragmentTransaction.replace(R.id.mainFragment,searchFragment1,"searchFragment");
+                fragmentTransaction.replace(R.id.mainFragment, searchFragment1, "searchFragment");
                 fragmentTransaction.commit();
             }
 
@@ -348,7 +443,7 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(new HomeFragment());
         fragments.add(new MineFragment());
         fragments.add(new CommunityFragment());
-        fragments.add(new AboutFragment());
+//        fragments.add(new AboutFragment());
 
         //初始化viewpager的自定义适配器
         FragmentAdapter fragmentAdapter = new FragmentAdapter(fragments, getSupportFragmentManager());
@@ -372,17 +467,33 @@ public class MainActivity extends AppCompatActivity {
         bnView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                //关闭当前页面上的其他碎片
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                Fragment localFragment = fragmentManager.findFragmentByTag("localFragment");
+                Fragment searchFragment = fragmentManager.findFragmentByTag("searchFragment");
+                if (localFragment != null) {
+                    fragmentTransaction.remove(localFragment);
+                }
+                if (searchFragment != null) {
+                    fragmentTransaction.remove(searchFragment);
+                }
+                fragmentTransaction.commit();
                 //获取按钮id
                 int menuId = item.getItemId();
                 //转跳指定页面:Fragment
                 switch (menuId) {
                     case R.id.tab_home:
                         viewPager.setCurrentItem(0);
+                        for (MusicInfo musicInfo : curUserMusicList) {
+                            System.out.println(musicInfo);
+                        }
                         break;
                     case R.id.tab_mine:
                         viewPager.setCurrentItem(1);
-                        Intent in = new Intent(MainActivity.this, AudioPlayer.class);
-                        startActivity(in);
+//                        Intent in = new Intent(MainActivity.this, AudioPlayer.class);
+//                        startActivity(in);
                         break;
                     case R.id.tab_community:
                         viewPager.setCurrentItem(2);
@@ -393,20 +504,21 @@ public class MainActivity extends AppCompatActivity {
 //                        fragmentTransaction.remove(testFragment);
 //                        fragmentTransaction.commit();
                         break;
-                    case R.id.tab_about:
-                        viewPager.setCurrentItem(3);
-                        bnView.setVisibility(View.GONE);
-                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
-                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        com.ikunkun.kunmusic.views.SearchFragment searchFragment1 = new com.ikunkun.kunmusic.views.SearchFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("keyword","666");
-                        searchFragment1.setArguments(bundle);
-                        fragmentTransaction.add(R.id.mainFragment,searchFragment1);
-                        fragmentTransaction.commit();
-                        break;
+//                    case R.id.tab_about:
+//                        viewPager.setCurrentItem(3);
+////                        bnView.setVisibility(View.GONE);
+////                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayout.getLayoutParams();
+////                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+////                        FragmentManager fragmentManager = getSupportFragmentManager();
+////                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+////                        com.ikunkun.kunmusic.views.SearchFragment searchFragment1 = new com.ikunkun.kunmusic.views.SearchFragment();
+////                        Bundle bundle = new Bundle();
+////                        bundle.putString("keyword","666");
+////                        searchFragment1.setArguments(bundle);
+////                        fragmentTransaction.add(R.id.mainFragment,searchFragment1);
+////                        fragmentTransaction.commit();
+//                        System.out.println(Environment.getExternalStorageDirectory().getPath()+"/Music/ikunMusic");
+//                        break;
                 }
 
                 return false;
@@ -439,4 +551,6 @@ public class MainActivity extends AppCompatActivity {
     public static String getApiMusicIP() {
         return apiMusicIP;
     }
+
 }
+

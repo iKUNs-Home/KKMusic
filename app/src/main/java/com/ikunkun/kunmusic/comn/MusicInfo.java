@@ -7,17 +7,25 @@ import android.os.Binder;
 import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class MusicInfo extends LitePalSupport implements Serializable {
 
+    public MusicInfo() {
+        MusicPath = null;
+    }
+
     @Override
-    public String toString () {
+    public String toString() {
         return "MusicInfo{" +
-                "MusicId=" + MusicId +
+                "bmp_pic=" + Arrays.toString(bmp_pic) +
+                ", MusicId='" + MusicId + '\'' +
                 ", PageImg='" + PageImg + '\'' +
                 ", MusicName='" + MusicName + '\'' +
                 ", MusicSinger='" + MusicSinger + '\'' +
                 ", MusicUrl='" + MusicUrl + '\'' +
+                ", MusicPath='" + MusicPath + '\'' +
+                ", MusicSize=" + MusicSize +
                 '}';
     }
 

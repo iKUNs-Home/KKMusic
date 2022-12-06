@@ -39,6 +39,15 @@ public class UserInfo extends LitePalSupport {
     private String Ilikename=new String();
     private String Ilikesinger=new String();
     private String Ilikeurl=new String();
+    private String ILikeCoverUrl = new String();
+
+    public String getILikeCoverUrl() {
+        return ILikeCoverUrl;
+    }
+
+    public void setILikeCoverUrl(String ILikeCoverUrl) {
+        this.ILikeCoverUrl = ILikeCoverUrl;
+    }
 
     public String getUserName() {
         return userName;

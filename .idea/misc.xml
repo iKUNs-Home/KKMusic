@@ -3,13 +3,32 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/drawable/buttonshape.xml" value="0.139" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/drawable/comments_drawable_blue.xml" value="0.139" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/drawable/covershape.xml" value="0.139" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/activity_audio_player.xml" value="0.23802083333333332" />
-        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/activity_ilike.xml" value="0.25364583333333335" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/activity_search.xml" value="0.25364583333333335" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/community_list.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/community_posting.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_about.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_ap_cover.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_ap_lyric.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_community.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_home.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_home_app.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_home_local.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_mine.xml" value="0.25104166666666666" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/fragment_test.xml" value="0.1109375" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/ilike_list.xml" value="0.23802083333333332" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/item_popip.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/login.xml" value="0.25104166666666666" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/nav_header.xml" value="0.25104166666666666" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/play_control_bottom.xml" value="0.4" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/register.xml" value="0.25104166666666666" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/layout/search_list.xml" value="0.19479166666666667" />
+        <entry key="..\:/CODE/Java/Android/EsaikoProject/KKMusic/app/src/main/res/menu/tab_menu.xml" value="0.1" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KunMusic/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KunMusic/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KunMusic/app/src/main/res/drawable/selected_menu_color.xml" value="0.1" />
@@ -24,6 +43,7 @@
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KunMusic/app/src/main/res/layout/nav_header.xml" value="0.171875" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KunMusic/app/src/main/res/menu/drawer_menu.xml" value="0.17291666666666666" />
         <entry key="..\:/CODE/Java/Android/EsaikoProject/KunMusic/app/src/main/res/menu/tab_menu.xml" value="0.2526041666666667" />
+        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/anim_pop.xml" value="0.1405" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/anim_pop2.xml" value="0.1" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/buttonshape.xml" value="0.141" />
@@ -38,6 +58,7 @@
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/shape.xml" value="0.1475" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/textshape.xml" value="0.1475" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/ui_grey.xml" value="0.1055" />
+        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/ui_home.xml" value="0.1445" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/ui_main_shape.xml" value="0.2305" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/ui_main_shapemine.xml" value="0.2305" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/drawable/ui_second_shape.xml" value="0.244" />
@@ -56,7 +77,7 @@
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_ap_lyric.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_community.xml" value="0.1" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_home.xml" value="0.10877192982456141" />
-        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_home_app.xml" value="0.17766497461928935" />
+        <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_home_app.xml" value="0.16147308781869688" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_home_local.xml" value="0.161231884057971" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_mine.xml" value="0.1" />
         <entry key="..\:/Users/15815/Desktop/KKMusic/app/src/main/res/layout/fragment_test.xml" value="0.18333333333333332" />

@@ -26,6 +26,32 @@
             android:background="@drawable/apback" />
 
         <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/apName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="境界線"
+                android:textColor="@color/cf2f2f2"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/apSinger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/apName"
+                android:layout_centerHorizontal="true"
+                android:text="amazarashi"
+                android:textColor="@color/default_clickable_color"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_alignParentBottom="true"
@@ -98,6 +124,15 @@
             android:layout_marginBottom="20dp">
 
             <ImageButton
+                android:id="@+id/playMode"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/sequence" />
+
+            <ImageButton
                 android:id="@+id/ib_previous"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -121,6 +156,16 @@
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@+id/ib_pause"
                 android:background="@drawable/next" />
+
+            <ImageButton
+                android:id="@+id/doYouLike"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/unlike" />
+
         </RelativeLayout>
 
 

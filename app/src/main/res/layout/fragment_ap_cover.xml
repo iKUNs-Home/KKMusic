@@ -18,7 +18,7 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/cover1"
+        android:background="@drawable/cover2"
         app:shapeAppearance="@style/CircleStyle"/>
 
 
