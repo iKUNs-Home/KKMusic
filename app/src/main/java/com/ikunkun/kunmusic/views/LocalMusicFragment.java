@@ -119,10 +119,10 @@ public class LocalMusicFragment extends Fragment {
                         recyclerView.setAdapter(recyclerListAdapt);
                         Toast.makeText(getContext(), "扫描完成", Toast.LENGTH_SHORT).show();
                         System.out.println("扫描完成");
+
                         break;
                     }
                 }
-
             }
         });
     }
