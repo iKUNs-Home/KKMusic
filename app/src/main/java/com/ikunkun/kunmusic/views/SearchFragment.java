@@ -104,7 +104,7 @@ public class SearchFragment extends Fragment {
         RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(musicInfoList);
+        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(musicInfoList,recyclerView);
 //        recyclerListAdapt.setListener(new RecyclerListAdapt.OnItemClickListener() {
 //            @Override
 //            public void onClick(View view) {

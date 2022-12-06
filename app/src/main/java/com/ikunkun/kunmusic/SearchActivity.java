@@ -75,7 +75,7 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(musicInfoList);
+        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(musicInfoList,recyclerView);
 //        recyclerListAdapt.setListener(new RecyclerListAdapt.OnItemClickListener() {
 //            @Override
 //            public void onClick(View view) {

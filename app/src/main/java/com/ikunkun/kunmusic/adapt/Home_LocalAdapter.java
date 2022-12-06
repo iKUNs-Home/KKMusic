@@ -24,14 +24,14 @@ public class Home_LocalAdapter  extends AppCompatActivity {
     public List<MusicInfo> list=new ArrayList<MusicInfo>();
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        permissionsRequest();
-        System.out.println("list.size"+list.size());
-        setContentView(R.layout.fragment_home_local);
-        recyclerView=findViewById(R.id.homelocal);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(list);
-        recyclerView.setAdapter(recyclerListAdapt);
+//        permissionsRequest();
+//        System.out.println("list.size"+list.size());
+//        setContentView(R.layout.fragment_home_local);
+//        recyclerView=findViewById(R.id.homelocal);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        recyclerView.setLayoutManager(linearLayoutManager);
+//        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(list);
+//        recyclerView.setAdapter(recyclerListAdapt);
     }
     private void permissionsRequest() {
 

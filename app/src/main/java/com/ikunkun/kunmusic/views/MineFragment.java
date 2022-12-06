@@ -1,7 +1,10 @@
 package com.ikunkun.kunmusic.views;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,9 +23,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
+import com.ikunkun.kunmusic.App;
 import com.ikunkun.kunmusic.LoginActivity;
+import com.ikunkun.kunmusic.MainActivity;
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.adapt.IlikeAdapter;
+import com.ikunkun.kunmusic.comn.CommunityMessageInfo;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 import com.ikunkun.kunmusic.comn.UserInfo;
 import com.ikunkun.kunmusic.tools.MusicUtils;
@@ -41,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MineFragment extends Fragment implements View.OnClickListener{
+public class MineFragment extends Fragment implements View.OnClickListener {
     static TextView mine_name;
     static FragmentActivity context;
     List<UserInfo> userinfolist;
@@ -49,21 +55,22 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     public static Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            Bundle bundle =msg.getData();
+            Bundle bundle = msg.getData();
             System.out.println(mine_name);
             init(bundle.getString("username"));
 //            mine_name.setText(bundle.getString("username"));
         }
     };
-    public static void init(String str){
-        mine_name=context.findViewById(R.id.mine_name);
+
+    public static void init(String str) {
+        mine_name = context.findViewById(R.id.mine_name);
         LinearLayout Ilike = context.findViewById(R.id.mine_ilike);
         mine_name.setText(str);
     }
 
     @Nullable
 //    本地音乐列表
-    public List<MusicInfo> list=new ArrayList<MusicInfo>();
+    public List<MusicInfo> list = new ArrayList<MusicInfo>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,13 +82,28 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        context =getActivity();
+        context = getActivity();
         LinearLayout mine_music = getActivity().findViewById(R.id.mine_music);
-        TextView mine_musicnum=getActivity().findViewById(R.id.mine_musicnum);
+        TextView mine_musicnum = getActivity().findViewById(R.id.mine_musicnum);
 //        申请权限，并扫描手机音乐
-        permissionsRequest();
+//        if(LitePal.findAll(MusicInfo.class).size()==0) {
+//            LitePal.deleteAll(MusicInfo.class);
+//            permissionsRequest();
+//        }
 //        设置本地音乐数量
-        mine_musicnum.setText("  🏀 "+list.size()+"首");
+        list = LitePal.findAll(MusicInfo.class);
+        mine_musicnum.setText("  🏀 " + LitePal.findAll(MusicInfo.class).size() + "首");
+        //把本地音乐全部添加到总列表
+        SharedPreferences sp = context.getSharedPreferences("localMusicListStatus", MODE_PRIVATE);
+        boolean loIsAdd = sp.getBoolean("loMzActive", false);
+        System.out.println("loIsAdd " + loIsAdd);
+        if (list.size() != 0 && !loIsAdd) {
+            App.curUserMusicList.addAll(list);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean("loMzActive", true);
+            editor.apply();
+        }
+
 //        转调至本地音乐列表
         mine_music.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +115,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("list", (Serializable) list);
                 localMusicFragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.mainFragment,localMusicFragment,"localFragment");
+                fragmentTransaction.replace(R.id.mainFragment, localMusicFragment, "localFragment");
                 fragmentTransaction.commit();
 
 //                Intent intent_to_local = new Intent(getActivity(), localAdapter.class);
@@ -102,13 +124,13 @@ public class MineFragment extends Fragment implements View.OnClickListener{
             }
         });
 //        账号已登录
-        if(LoginActivity.tempuser.getUserName()!=null) {
+        if (LoginActivity.tempuser.getUserName() != null) {
 //            List<UserInfo> UserInfoList = LitePal.findAll(UserInfo.class);
             init(LoginActivity.tempuser.getUserName());
-            TextView mine_ilikenum=getActivity().findViewById(R.id.mine_ilikenum);
+            TextView mine_ilikenum = getActivity().findViewById(R.id.mine_ilikenum);
             userinfolist = LitePal.where(" userName = ?", LoginActivity.tempuser.getUserName()).find(UserInfo.class);
-            mznames=userinfolist.get(0).getIlikename().split("---");
-            mine_ilikenum.setText("  🏀 "+(mznames.length-1)+"首");
+            mznames = userinfolist.get(0).getIlikename().split("---");
+            mine_ilikenum.setText("  🏀 " + (mznames.length - 1) + "首");
             LinearLayout Ilike = getActivity().findViewById(R.id.mine_ilike);
             Ilike.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -120,17 +142,17 @@ public class MineFragment extends Fragment implements View.OnClickListener{
                 }
             });
 //            未登录账号
-        }else{
-            TextView mine_name=getActivity().findViewById(R.id.mine_name);
-            TextView mine_id=getActivity().findViewById(R.id.mine_id);
-            TextView mine_ilikenum=getActivity().findViewById(R.id.mine_ilikenum);
+        } else {
+            TextView mine_name = getActivity().findViewById(R.id.mine_name);
+            TextView mine_id = getActivity().findViewById(R.id.mine_id);
+            TextView mine_ilikenum = getActivity().findViewById(R.id.mine_ilikenum);
             mine_ilikenum.setText("\uD83C\uDFC0 请登录");
             mine_id.setText("Kunmusic's 游客");
             mine_name.setText("点击登录");
             mine_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(getActivity(),LoginActivity.class);
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
 
                 }
@@ -144,9 +166,11 @@ public class MineFragment extends Fragment implements View.OnClickListener{
             });
         }
     }
+
     @Override
     public void onClick(View view) {
     }
+
     private void permissionsRequest() {
 
         PermissionX.init(this).permissions(
@@ -171,7 +195,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
                         if (allGranted) {
                             //通过后的业务逻辑
                             list = MusicUtils.getMusicData(requireActivity());
-                            System.out.println("test:"+list.size());
+                            System.out.println("当前本地音乐数量" + LitePal.findAll(MusicInfo.class).size());
                         } else {
 //                            show("您拒绝了如下权限：" + deniedList);
                         }
