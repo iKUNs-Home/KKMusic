@@ -95,7 +95,6 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
             listView = itemView;
             mzListDownload = itemView.findViewById(R.id.mzListDownload);
             songItem = itemView.findViewById(R.id.each_songItem);
-            ;
         }
     }
 
@@ -267,6 +266,7 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
             }
         });
     }
+
 
 
     //这个函数用来设置布局控件中每个项目(通过position)的数据

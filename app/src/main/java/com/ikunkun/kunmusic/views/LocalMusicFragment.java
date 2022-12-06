@@ -38,7 +38,6 @@ import com.permissionx.guolindev.request.ForwardScope;
 import org.litepal.LitePal;
 
 import java.util.List;
-
 public class LocalMusicFragment extends Fragment {
 
     List<MusicInfo> list;

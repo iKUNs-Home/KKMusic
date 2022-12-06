@@ -1,6 +1,5 @@
 package com.ikunkun.kunmusic;
 
-import static com.ikunkun.kunmusic.adapt.RecyclerListAdapt.base64ToBitmap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +36,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.snackbar.Snackbar;
 import com.ikunkun.kunmusic.adapt.FragmentAdapter;
 import com.ikunkun.kunmusic.service.MusicService;
 import com.ikunkun.kunmusic.tools.ImageFilter;
