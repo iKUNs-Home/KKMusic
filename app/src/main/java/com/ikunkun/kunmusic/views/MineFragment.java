@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.ikunkun.kunmusic.LoginActivity;
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.adapt.IlikeAdapter;
-import com.ikunkun.kunmusic.adapt.localAdapter;
+import com.ikunkun.kunmusic.comn.CommunityMessageInfo;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 import com.ikunkun.kunmusic.comn.UserInfo;
 import com.ikunkun.kunmusic.tools.MusicUtils;
@@ -81,9 +80,12 @@ public class MineFragment extends Fragment implements View.OnClickListener{
         LinearLayout mine_music = getActivity().findViewById(R.id.mine_music);
         TextView mine_musicnum=getActivity().findViewById(R.id.mine_musicnum);
 //        申请权限，并扫描手机音乐
-        permissionsRequest();
+//        if(LitePal.findAll(MusicInfo.class).size()==0) {
+//            LitePal.deleteAll(MusicInfo.class);
+//            permissionsRequest();
+//        }
 //        设置本地音乐数量
-        mine_musicnum.setText("  🏀 "+list.size()+"首");
+        mine_musicnum.setText("  🏀 "+LitePal.findAll(MusicInfo.class).size()+"首");
 //        转调至本地音乐列表
         mine_music.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,7 +175,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
                         if (allGranted) {
                             //通过后的业务逻辑
                             list = MusicUtils.getMusicData(requireActivity());
-                            System.out.println("test:"+list.size());
+                            System.out.println("当前本地音乐数量"+LitePal.findAll(MusicInfo.class).size());
                         } else {
 //                            show("您拒绝了如下权限：" + deniedList);
                         }

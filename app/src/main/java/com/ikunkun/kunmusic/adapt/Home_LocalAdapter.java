@@ -1,15 +1,10 @@
 package com.ikunkun.kunmusic.adapt;
 
 import android.Manifest;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
 
 import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.comn.MusicInfo;
@@ -29,14 +24,14 @@ public class Home_LocalAdapter  extends AppCompatActivity {
     public List<MusicInfo> list=new ArrayList<MusicInfo>();
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        permissionsRequest();
-        System.out.println("list.size"+list.size());
-        setContentView(R.layout.fragment_home_local);
-        recyclerView=findViewById(R.id.homelocal);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(list);
-        recyclerView.setAdapter(recyclerListAdapt);
+//        permissionsRequest();
+//        System.out.println("list.size"+list.size());
+//        setContentView(R.layout.fragment_home_local);
+//        recyclerView=findViewById(R.id.homelocal);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        recyclerView.setLayoutManager(linearLayoutManager);
+//        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(list);
+//        recyclerView.setAdapter(recyclerListAdapt);
     }
     private void permissionsRequest() {
 

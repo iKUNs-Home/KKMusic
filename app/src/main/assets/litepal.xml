@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="user" /> //数据库名称
-    <version value="8" />  //数据库版本号
+    <version value="12" />  //数据库版本号
     <list>
         <mapping class="com.ikunkun.kunmusic.comn.CommunityMessageInfo" />
     </list>
     <list>
         <mapping class="com.ikunkun.kunmusic.comn.UserInfo" /> //用于设定所有的映射模型,即你定义数据库表的类名路径
     </list>
-
+    <list>
+        <mapping class="com.ikunkun.kunmusic.comn.MusicInfo" />
+    </list>
 </litepal>

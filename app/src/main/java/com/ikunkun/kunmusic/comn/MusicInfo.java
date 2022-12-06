@@ -4,9 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Binder;
 
+import org.litepal.crud.LitePalSupport;
+
 import java.io.Serializable;
 
-public class MusicInfo implements Serializable {
+public class MusicInfo extends LitePalSupport implements Serializable {
 
     @Override
     public String toString () {
@@ -81,6 +83,7 @@ public class MusicInfo implements Serializable {
      * MusicSize 大小
      */
 //    bitmap无法可序化，需转化为byte[]形式
+    private String base64;
     private byte[] bmp_pic;
     private String MusicId;
     private String PageImg;
@@ -89,6 +92,14 @@ public class MusicInfo implements Serializable {
     private String MusicUrl;
     private String MusicPath;
     private long MusicSize;
+    public String getBase64() {
+        return base64;
+    }
+
+    public void setBase64(String base64) {
+        this.base64 = base64;
+    }
+
     public long getMusicSize() {
         return MusicSize;
     }

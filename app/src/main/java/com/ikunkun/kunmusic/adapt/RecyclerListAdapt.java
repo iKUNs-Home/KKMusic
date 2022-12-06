@@ -8,13 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,6 +48,7 @@ import com.ikunkun.kunmusic.service.MusicService;
 
 import org.litepal.LitePal;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -64,7 +69,7 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
     View listView;
     Context context;
     LinearLayout songItem;
-
+    private androidx.recyclerview.widget.RecyclerView recyclerView;
     @Override
     public void onClick(View view) {
         int position = (int) view.getTag();
@@ -83,14 +88,16 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
 //            mzDownload = itemView.findViewById(R.id.mzListDownload);
             listView = itemView;
             mzListDownload = itemView.findViewById(R.id.mzListDownload);
-            songItem = itemView.findViewById(R.id.each_songItem);
+            songItem = itemView.findViewById(R.id.each_songItem);;
         }
     }
 
 
     //构造函数
-    public RecyclerListAdapt(List<MusicInfo> musicInfoList) {
+    public RecyclerListAdapt(List<MusicInfo> musicInfoList
+            ,androidx.recyclerview.widget.RecyclerView recyclerView) {
         this.musicInfoList = musicInfoList;
+        this.recyclerView=recyclerView;
     }
 
 
@@ -228,6 +235,7 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
     }
 
 
+
     //这个函数用来设置布局控件中每个项目(通过position)的数据
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
@@ -241,24 +249,42 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
 //        } else {
 //            System.out.println("null");
 //        }
-        if(musicInfoList.get(position).getBmp_pic()!=null){
-            BitmapDrawable bmpDraw = new BitmapDrawable(getBitmap(musicInfoList.get(position).getBmp_pic()));
-            mzCover.setImageDrawable(bmpDraw);
-        }else {
-            Glide.with(listView).load(musicInfoList.get(position).getPageImg()).into(mzCover);
+
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                    Glide.with(listView).resumeRequests();
+//                }else {
+//                    Glide.with(listView).pauseRequests();
+//                }
+//            }
+//        });
+        Bitmap musicimage = null;
+        if (musicInfoList.get(pos).getBase64()==null) {
+            System.out.println("image is null");
+        }else{
+            musicimage=base64ToBitmap(musicInfoList.get(pos).getBase64());
         }
-        if(musicInfoList.get(position).getMusicName() == null){
+        if (musicimage != null) {
+            Drawable bmpDraw = new BitmapDrawable(musicimage);
+            Glide.with(listView).load(bmpDraw).into(mzCover);
+//            mzCover.setImageBitmap(musicimage);
+//             mzCover.setImageDrawable(bmpDraw);
+        } else {
+            Glide.with(listView).load(musicInfoList.get(pos).getPageImg()).into(mzCover);
+        }
+        if (musicInfoList.get(position).getMusicName() == null) {
             mzName.setText("未知歌曲");
-        }else {
+        } else {
             mzName.setText(musicInfoList.get(position).getMusicName());
         }
-        if(musicInfoList.get(position).getMusicSinger() == null){
+        if (musicInfoList.get(position).getMusicSinger() == null) {
             mzSinger.setText("未知歌手");
-        }else {
+        } else {
             mzSinger.setText(musicInfoList.get(position).getMusicSinger());
         }
         mzListDownload.setTag(position);
-
 
 
         songItem.setOnClickListener(new View.OnClickListener() {
@@ -267,8 +293,8 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
 //                System.out.println(666);
                 if (musicInfoList.get(pos).getMusicId() != null) {
                     MusicSearchByID(musicInfoList.get(pos).getMusicId(), pos);
-                }else {
-                    MusicLocal(musicInfoList.get(pos).getMusicPath(),pos);
+                } else {
+                    MusicLocal(musicInfoList.get(pos).getMusicPath(), pos);
                 }
 
             }
@@ -398,6 +424,39 @@ public class RecyclerListAdapt extends RecyclerView.Adapter implements View.OnCl
     public static Bitmap getBitmap(byte[] data){
         return BitmapFactory.decodeByteArray(data, 0, data.length);//从字节数组解码位图
     }
+
+    public static byte[] getBytes(Bitmap bitmap){
+        //实例化字节数组输出流
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);//压缩位图
+        return baos.toByteArray();//创建分配字节数组
+    }
+
+    /**
+     * 加载封面
+     * mediaUri MP3文件路径
+     */
+    private static Bitmap loadingCover(String mediaUri) {
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        mediaMetadataRetriever.setDataSource(mediaUri);
+        byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
+        Bitmap bitmap = null;
+        if (picture != null) {
+            bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+//            Matrix matrix = new Matrix();
+//            matrix.setScale(0.1f, 0.1f);
+//            bitmap=Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+//                    bitmap.getHeight(), matrix, true);
+        }
+        return bitmap;
+    }
+
+    public static Bitmap base64ToBitmap(String base64Data) {
+        byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length );
+    }
+
+
     @Override
     public int getItemViewType(int position) {
         // 给每个ItemView指定不同的类型，这样在RecyclerView看来，这些ItemView全是不同的，不能复用

@@ -37,7 +37,7 @@ public class localAdapter extends AppCompatActivity implements View.OnClickListe
         recyclerView=findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(list);
+        RecyclerListAdapt recyclerListAdapt = new RecyclerListAdapt(list,recyclerView);
         recyclerView.setAdapter(recyclerListAdapt);
     }
     @Override

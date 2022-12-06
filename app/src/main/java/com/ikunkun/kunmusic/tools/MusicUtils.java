@@ -3,16 +3,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Matrix;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.widget.ImageView;
+import android.util.Base64;
 
-import com.ikunkun.kunmusic.R;
 import com.ikunkun.kunmusic.comn.MusicInfo;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,10 +61,10 @@ public class MusicUtils {
                 Bitmap musicimage=loadingCover(song.getMusicPath());
                 if(musicimage==null){
                     System.out.println("musicimageisnull");
+                }else {
+                    song.setBase64(bitmapToBase64(musicimage));
+//                    song.setBmp_pic(musicimage);
                 }
-                BitmapDrawable bmpDraw = new BitmapDrawable(musicimage);
-
-                song.setBmp_pic(getBytes(musicimage));
                 //歌曲时长
 //                song.g = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
                 //歌曲大小
@@ -74,11 +74,18 @@ public class MusicUtils {
                     // 注释部分是切割标题，分离出歌曲名和歌手 （本地媒体库读取的歌曲信息不规范）
                     if (song.getMusicName().contains("-")) {
                         String[] str = song.getMusicName().split("-");
-                        song.setMusicSinger(str[0]);
-                        song.setMusicName(str[1]);
+                        if(str[0]!=null) {
+                            song.setMusicName(str[0]);
+                        }
+                        if(str.length==2) {
+                            song.setMusicSinger(str[1]);
+                        }else {
+                            song.setMusicSinger("未知歌手");
+                        }
                     }
-                    list.add(song);
                 }
+                    list.add(song);
+                    song.save();
             }
             // 释放资源
             cursor.close();
@@ -89,12 +96,20 @@ public class MusicUtils {
     /**
      * 加载封面
      * mediaUri MP3文件路径
+     * @return
      */
     private static Bitmap loadingCover(String mediaUri) {
-        MediaMetadataRetriever mediaMetadataRetriever=new MediaMetadataRetriever();
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(mediaUri);
         byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
-        Bitmap bitmap= BitmapFactory.decodeByteArray(picture,0,picture.length);
+        Bitmap bitmap = null;
+        if (picture != null) {
+            bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+            Matrix matrix = new Matrix();
+            matrix.setScale(0.1f, 0.1f);
+            bitmap=Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                    bitmap.getHeight(), matrix, true);
+        }
         return bitmap;
     }
 
@@ -103,6 +118,35 @@ public class MusicUtils {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);//压缩位图
         return baos.toByteArray();//创建分配字节数组
+    }
+    public static String bitmapToBase64(Bitmap bitmap) {
+
+        String result = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            if (bitmap != null) {
+                baos = new ByteArrayOutputStream();
+                //如果有透明的部分,解码后该背景会变黑
+                //有需要就将格式改为png
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+                baos.flush();
+                baos.close();
+                byte[] bitmapBytes = baos.toByteArray();
+                result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (baos != null) {
+                    baos.flush();
+                    baos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
 

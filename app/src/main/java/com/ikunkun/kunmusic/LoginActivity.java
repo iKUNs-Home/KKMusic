@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             } else {
                 //登录失败
-                tempuser=null;
+//                tempuser=null;
                 Toast.makeText(this, "登录失败", Toast.LENGTH_SHORT).show();
             }
         }

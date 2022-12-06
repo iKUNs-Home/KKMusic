@@ -1,7 +1,5 @@
 package com.ikunkun.kunmusic.views;
 
-import android.Manifest;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,24 +8,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.OrientationHelper;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.ikunkun.kunmusic.R;
-import com.ikunkun.kunmusic.adapt.Home_LocalAdapter;
-import com.ikunkun.kunmusic.adapt.RecyclerListAdapt;
 import com.ikunkun.kunmusic.adapt.ViewPageAdapt;
 import com.ikunkun.kunmusic.comn.MusicInfo;
-import com.ikunkun.kunmusic.tools.MusicUtils;
-import com.permissionx.guolindev.PermissionX;
-import com.permissionx.guolindev.callback.ExplainReasonCallbackWithBeforeParam;
-import com.permissionx.guolindev.callback.ForwardToSettingsCallback;
-import com.permissionx.guolindev.callback.RequestCallback;
-import com.permissionx.guolindev.request.ExplainScope;
-import com.permissionx.guolindev.request.ForwardScope;
 
 import java.util.ArrayList;
 import java.util.List;
